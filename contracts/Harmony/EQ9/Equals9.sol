@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 
 /**
  * @title Equals9 (EQ9)
- * @author Equals9 Empreendimentos e Participações S/A
+ * @author Pedro Henrique Bufulin de Almeida
  * @notice Implements a basic ERC20 utility & staking token.
  */
 contract Equals9UtilityAndStaking is ERC20 {
