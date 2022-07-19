@@ -1,0 +1,585 @@
+No need to generate any newer typings.
+0x4d66a4Cb458b8fC3113D5a9432C0a14301b8C382
+harmony balance 504671336833307040
+[
+  {
+    address: '0x1105d6aEe4A562Bb27706F4632b69a1c22206135',
+    amount: '28158.49'
+  },
+  {
+    address: '0xA63a06271980Bb25F0F77a26723a7aee08E14765',
+    amount: '201258.34'
+  },
+  {
+    address: '0x9c3759B3F5d56150D494EB8a042A95bf96767E31',
+    amount: '173221.0'
+  },
+  {
+    address: '0x066AB033463d3Ef7479030004bAE9ff4D97C3410',
+    amount: '952923.51'
+  },
+  {
+    address: '0xf091118c37FB6c0B7B5ECb845Dec5edC3B664D90',
+    amount: '7300.0'
+  },
+  {
+    address: '0x895293C5f8dF4806CC04218Bb61Bcb72e8c19b03',
+    amount: '15000.0'
+  },
+  {
+    address: '0xd1Fea14bfa8DF54dF62cBC6569ACF9aC77d0DFfA',
+    amount: '903336.18'
+  },
+  {
+    address: '0x4e25180A032Cb055230ff1036d0e1D30D2719506',
+    amount: '17122.17'
+  },
+  {
+    address: '0x9c0FDE721AFb45a5ADD917f9226111125370Eb84',
+    amount: '443801.0'
+  },
+  {
+    address: '0x3897cc2eb113472E67647fD62B8d79Ba42F5f03E',
+    amount: '12579.63'
+  },
+  {
+    address: '0x5D3839F88C00b6eed9c94B30d62343ED7552eE67',
+    amount: '35000.0'
+  },
+  {
+    address: '0x75fcf755c4415D284bd5eBFe9Ab8B1fCcB5ac561',
+    amount: '0.0'
+  },
+  {
+    address: '0xFBb35ca843aeAe5694De47C9fbDAbDbdfe532668',
+    amount: '150936.46'
+  },
+  {
+    address: '0x2317ea6AEfC6238cF7cCa88EB3abC387BB69294F',
+    amount: '21591.65'
+  },
+  {
+    address: '0x3F6603B9b97d2ca17b769040d3f433cB7cb08eE5',
+    amount: '27.0'
+  },
+  {
+    address: '0xdf9496B0A056CF59e0583b7e51bD5523FDcab71E',
+    amount: '1993.93'
+  },
+  {
+    address: '0x971Ad731F12DaC02509f41EB6B884f02Cf314c71',
+    amount: '185465.77'
+  },
+  {
+    address: '0xFC31ea55B31e1D1C6728ea57B41b32e74d0c4e8C',
+    amount: '3.0'
+  },
+  {
+    address: '0x23014775cf95028ADb7c3dB52d123d457DD20Cf8',
+    amount: '1914.0'
+  },
+  {
+    address: '0x93ab0113eD5c241D2068c998F1fD36645e293936',
+    amount: '57000.0'
+  },
+  {
+    address: '0xA11509d7c7A8Cbe861E4381885d49Bf2561ED1AC',
+    amount: '45000.0'
+  },
+  {
+    address: '0x907e6A4AAF68eDEE1aB18E4613ce2BE15A0A974B',
+    amount: '16084.0'
+  },
+  {
+    address: '0x5a64ed1070481f5Ff93DF39e9ab8A8F678595Eb3',
+    amount: '50000.0'
+  },
+  {
+    address: '0xcbc91Aa87FD5134b32E7fBb9f328FC2161F59998',
+    amount: '20000.0'
+  },
+  {
+    address: '0x11A6c1BA8D2972A129A6Cc92A8D53dB0D0EC050e',
+    amount: '25630.0'
+  },
+  {
+    address: '0x796E467c51e462143eFEaDE19F276B755EeeCc73',
+    amount: '5210.0'
+  },
+  {
+    address: '0xa5e9CAe568fB12B4F43f5b3491cD030F652d1e89',
+    amount: '49030.0'
+  },
+  {
+    address: '0x0Da9265A9B28F311343751F552bdf207a65Ec59d',
+    amount: '5000.0'
+  },
+  {
+    address: '0xD63139E6d3D8ec47297518F59f0377C294FA0b2D',
+    amount: '2500.0'
+  },
+  {
+    address: '0x57ccB0Ec0F821E429bcF752c25f622696bc792F4',
+    amount: '10058.0'
+  },
+  {
+    address: '0xEAcEfFD435Ee5fb94AABea3F44628699EaA3edC5',
+    amount: '186515.0'
+  },
+  {
+    address: '0x211E1DF2133Abd8A8320D905956715EfD8a6dF22',
+    amount: '42130.14'
+  },
+  {
+    address: '0xe4daAe2194ea7452B9d18E74C53BFAE859d8575c',
+    amount: '5000.0'
+  },
+  {
+    address: '0xc1994E186DC35f2f12D50125c8AabE7B1281e35a',
+    amount: '12577.42'
+  },
+  {
+    address: '0x978Bed5687EC80FF78D32bb0896178AfE2024A3E',
+    amount: '36000.13'
+  },
+  {
+    address: '0x58fEd1B58C1B91ef539Df6974e6dc2b90b5e4668',
+    amount: '25124.76'
+  },
+  {
+    address: '0xb99D5966718c11A47a85865715343622003754e2',
+    amount: '254013.0'
+  },
+  {
+    address: '0x6FEa5B4fA9D972ab1D0BbC77D4029F37b9a28542',
+    amount: '603.0'
+  },
+  {
+    address: '0x25899fF993b484DC87B4F0751f918b0551619B59',
+    amount: '11849.0'
+  },
+  {
+    address: '0xd3e419D321891B060d2fb835144Ed217Fb033742',
+    amount: '4314.0'
+  },
+  {
+    address: '0x0bCDf6ddf333c42B88621A0C10545c73F6dCa327',
+    amount: '114326.0'
+  },
+  {
+    address: '0xebcE38Ddc593630156054FB876dAF464D01d79c9',
+    amount: '2500.0'
+  },
+  {
+    address: '0x3Bca482d46c52168d4616DB94e78A14A93AAb9E3',
+    amount: '110000.0'
+  },
+  {
+    address: '0x56adf61A8157A5C3F197FA5030A2a3413795893F',
+    amount: '250.0'
+  },
+  {
+    address: '0x88EA0209F089598691b9ba6357eAf79623134e17',
+    amount: '5000.0'
+  },
+  {
+    address: '0xcC107037e7579B082c1b3C64b80163a676a6ef05',
+    amount: '30000.0'
+  },
+  {
+    address: '0xAE80d7CDE2F65B89e2f60A6eF37A8f7802AB43b1',
+    amount: '3000.0'
+  },
+  {
+    address: '0x147E3AFeE5552c490cBc503f0D3b02582bA1eE18',
+    amount: '2000.0'
+  },
+  {
+    address: '0x2d8291FAa2cFCab2c703F7Bb7CC40A27C1Ab0Fbe',
+    amount: '5000.0'
+  },
+  {
+    address: '0xD2564EeCd808eCF644C2193dd99c4E98926F3c31',
+    amount: '2000.0'
+  },
+  {
+    address: '0x2F8f65735fbD4bE7085AD3e1811f632E7cAe5615',
+    amount: '4000.0'
+  },
+  {
+    address: '0xa8a6C524a1976D46DDa027C69c621D94F5B1Eb87',
+    amount: '2750.0'
+  },
+  {
+    address: '0x6cF81cDcCf561325EE045b56Db87ae312d6ed5Ca',
+    amount: '25000.0'
+  },
+  {
+    address: '0x67336232df14411FE829D31b857fac0351C76d30',
+    amount: '1624197.55775752'
+  },
+  {
+    address: '0x5aFFa83479777F283e3E017E77F297272cfAC046',
+    amount: '2766.05'
+  },
+  {
+    address: '0x64E53b428d3b109cf0Cf59D1BaD79e43777B1C76',
+    amount: '60225.0'
+  },
+  {
+    address: '0x08ad5A14a0Ed07C610e40Bc2d4D3c81ABE27135C',
+    amount: '25157.59'
+  },
+  {
+    address: '0x82306d54E9FFF1B1cF711D6F7b43a0764E1Ed940',
+    amount: '85000.0'
+  },
+  {
+    address: '0x906Df6e4167ec4d5A71d67a894344F84a2B635B1',
+    amount: '10000.0'
+  },
+  {
+    address: '0x2eE86eAed7ceC474611bfA421058B2Ea5ceEc4a0',
+    amount: '42097.0'
+  },
+  {
+    address: '0x8C1dF45D59b65F58EA0390aE1226B5cc5575087B',
+    amount: '50000.0'
+  },
+  {
+    address: '0x6dA0D4Be0EbA32F1c25a26234cB39ff9F159f993',
+    amount: '28344.0'
+  },
+  {
+    address: '0x383DDd567e999cabC12a511a3C9cB97d28999821',
+    amount: '25157.51'
+  },
+  {
+    address: '0xBb2CB5b2850560B448ae951cDE5893f90d779a55',
+    amount: '4000.0'
+  },
+  {
+    address: '0x64B9992Cc4363969f8a7b806DE23FAd3698B729F',
+    amount: '10000.0'
+  },
+  {
+    address: '0x037cf548B8EFc6F1ED4ADEDE5abcD68fC332c204',
+    amount: '5025.52'
+  },
+  {
+    address: '0xdEF788dc927E8b5E834Cfb9C0513991ECD2bb616',
+    amount: '167710.46462'
+  },
+  {
+    address: '0x138b33EC2756aAB9A41929971eE1D8Eaa4B269CE',
+    amount: '40.0'
+  },
+  {
+    address: '0xAa4A53d53BbF3C249f70EEd06E68AA179C55721E',
+    amount: '200000.0'
+  },
+  {
+    address: '0x05E1eC06057EB60f806d154db98fA759898F080B',
+    amount: '400.0'
+  },
+  {
+    address: '0x3c3b745319a9143C9cB6A5dCb44aF41Ff81aA3FC',
+    amount: '5000.0'
+  },
+  {
+    address: '0xfA7a85e7317f6Edc7F8783de468B7a100c3CE445',
+    amount: '5021.32'
+  },
+  {
+    address: '0x540E03e4681A041fAe8A9C1fA1BE7e6550502239',
+    amount: '342000.0'
+  },
+  {
+    address: '0xb79907d908e1aE135eBAEFf4e3c90D4C4cea1795',
+    amount: '342000.0'
+  },
+  {
+    address: '0xa702d7e8e00E4652D50ACb70269A1f01A6e4D0c7',
+    amount: '709.0'
+  },
+  {
+    address: '0x268E7821e4522c46cd28165a4C4a444e56f1E344',
+    amount: '70.27'
+  },
+  {
+    address: '0xEd696AC30C2E2Fce734343FDb174F5713D5cAb8b',
+    amount: '16762.0'
+  },
+  {
+    address: '0x752a7e5E805d28A9b43D24BE7f6E86F0041e683C',
+    amount: '427441.42'
+  },
+  {
+    address: '0xCFb33dAA76527b7Dee47dC44cBb6D04D800620fE',
+    amount: '10000.0'
+  },
+  {
+    address: '0x107f9802b400176d58e5488143f348072dd7c639',
+    amount: '0.0'
+  },
+  {
+    address: '0x76E9e86053d6176281aD2098f134b369C89cCe00',
+    amount: '10056.22'
+  },
+  {
+    address: '0x59C79dE78592da94BBf1f9AE6b707a538525Ab4d',
+    amount: '200.0'
+  },
+  {
+    address: '0xa16D58d2A04DAf18e6CddceA31adD392b1767329',
+    amount: '135980.0'
+  },
+  {
+    address: '0xCcA6Ce5946CB7E8D91ACc09da359A511d97AFD80',
+    amount: '9000.0'
+  },
+  {
+    address: '0xFD21D64cC64508A5F02e4341526158b5003Dfc6f',
+    amount: '100.0'
+  },
+  {
+    address: '0xAdE065C6A287ac33472081619Bf0bBcecD640B83',
+    amount: '533.33'
+  },
+  {
+    address: '0xD926588802D26C09a7B472c6eF9FfDe463807980',
+    amount: '150.0'
+  },
+  {
+    address: '0x99773143E343b49A823d30Aa43FCDB751689f138',
+    amount: '10000.0'
+  },
+  {
+    address: '0xAD0f64209Dc9ADAB2C73861dC82E9CE8298fBDa0',
+    amount: '0.0'
+  },
+  {
+    address: '0x7120216ff72c29A4F72c66cB065f76C98500186F',
+    amount: '40.0'
+  },
+  {
+    address: '0x8a769Eb331D5216945aA45C4210F4B33Aca20f05',
+    amount: '18750.0'
+  },
+  {
+    address: '0xaF084b0522D247AcaE52dFA93b61D9e4FBB9b79a',
+    amount: '43365.2'
+  },
+  {
+    address: '0xA294Ae6ebaDb88724A47Cc903cf8871F763A323a',
+    amount: '4171.32'
+  },
+  {
+    address: '0x38d60A92E303f702F891d263F9424b55D55305e2',
+    amount: '0.0'
+  },
+  {
+    address: '0x6861bFa2Bbe23E38753B4Cac99E87B023f069185',
+    amount: '250000.0'
+  },
+  {
+    address: '0xad2876c11404cAb00D97Ddbf0aF4EE8a49651cf7',
+    amount: '0.0'
+  },
+  {
+    address: '0xE75e23174753A1E7D8cF52b6b25e97F7530EC1eE',
+    amount: '0.0'
+  },
+  {
+    address: '0x38B93C1395CB900AE12b46C0F0E8F6Ce5Ebb45BB',
+    amount: '0.314'
+  },
+  {
+    address: '0xE0bF16ae7a6D221fE1349fF9e0fbA212a85A26C2',
+    amount: '1.0'
+  },
+  {
+    address: '0x683eEF0e8cD87201F1199354135A42c5C432F4A4',
+    amount: '25.0'
+  },
+  {
+    address: '0x0afA275fc96aEfF4cA09679d260fE3a7b9191dD6',
+    amount: '500.0'
+  },
+  {
+    address: '0xA10C98Eb53d57871042b3E3a55a1cdf519689e7D',
+    amount: '54.0'
+  },
+  {
+    address: '0xEbD9BdBb9D6aaF987e613552bF3aEf3c64E2cAa2',
+    amount: '5000.0'
+  },
+  {
+    address: '0xfb903CF936D088CEB173991aB872031D95C14fc1',
+    amount: '29785.0'
+  },
+  {
+    address: '0xfe0AeD75d0aff92bE69228e9ECf5f3A838ACEf90',
+    amount: '16.17'
+  },
+  {
+    address: '0xa1F0D1372a6fe85e161920E9Cc499040cf77140b',
+    amount: '100.0'
+  },
+  {
+    address: '0x738Ede357E115312e4F1e93B0c6085bb4683d747',
+    amount: '50.0'
+  },
+  {
+    address: '0x4569349254b9a7Cff659b383C075C600DBA3e974',
+    amount: '3.33'
+  },
+  {
+    address: '0xcC9270e03F3Be292607B0a69c25Cc1bc45a4E6EF',
+    amount: '4413.0'
+  },
+  {
+    address: '0xE2CaC6929cCc9F47e0A96C2ceb74350D06dc6865',
+    amount: '2000.0'
+  },
+  {
+    address: '0x2Ac3cE5e5B4BE311A31090959a3790F9d9350b9D',
+    amount: '66667.0'
+  },
+  {
+    address: '0xFeCCE198b3A5A7e75f33CD30030704Df6d1b5ED4',
+    amount: '12500.0'
+  },
+  {
+    address: '0xFB6329921e05E60B83206Df8608211f82Dcc31C8',
+    amount: '7000.0'
+  },
+  {
+    address: '0xa25cC6C0a56D2B7823B671628386Fbf050fD2126',
+    amount: '5000.0'
+  },
+  {
+    address: '0xb19CEEd7AD5Caf4fd871E62D4f058f3C3085c5E7',
+    amount: '6300.0'
+  },
+  {
+    address: '0x7a4FB552A85d2cd3ab9b4322cA274d613CD1b263',
+    amount: '0.0'
+  },
+  {
+    address: '0xBf25F64F21af714679E6F44e2F263C7EAa3AB96f',
+    amount: '10.0'
+  },
+  {
+    address: '0x867De2ac2922c0D3961698C4D1454E0fBafE3128',
+    amount: '29500.0'
+  },
+  {
+    address: '0x5822643B514a9879Fa44EF8217004d6420c865Be',
+    amount: '10.33'
+  },
+  {
+    address: '0x9a24E08EA79ca3eD52d1c479B58CfFB1d047A27e',
+    amount: '0.03'
+  },
+  {
+    address: '0xC3e6C3b25872364a51bB56000d8dF7F83927d731',
+    amount: '3849.0'
+  },
+  {
+    address: '0xa43c18471F9541473e44A3B7910C970f4332F04a',
+    amount: '3500.0'
+  },
+  {
+    address: '0x25954B5976AD0e875B901016cdc3c7192106EAC9',
+    amount: '50.0'
+  },
+  {
+    address: '0x39670B4a9C30512ecC4BDF2ee02511088e81EC80',
+    amount: '157.09'
+  },
+  {
+    address: '0x06Ea6Ce33F7B62B2C31d760fa9D16e86Df2E239A',
+    amount: '227.11'
+  },
+  {
+    address: '0x45E59106d175f126dC53156710F7E1B62822F181',
+    amount: '1560.0'
+  },
+  {
+    address: '0xa8e7f3e90aD58D23AEbE41E90F7Af0EC3e4464Fc',
+    amount: '71546.0'
+  },
+  {
+    address: '0xD05196457E5DB963608a3B09c71B8082C03937B7',
+    amount: '16.67'
+  },
+  {
+    address: '0x6A458a4A3c203f31b3fB7007fe6AB84405efF98D',
+    amount: '100.0'
+  },
+  {
+    address: '0x875281BAd3Cc32CCdb03D2d7EE193c35b8890BCd',
+    amount: '5333.22'
+  },
+  {
+    address: '0xC73C3cCDD8D426d2C023162726AAa1105eABF9A6',
+    amount: '289.84'
+  },
+  {
+    address: '0xe8eF9929C3c34BA190FC893599ba5885ED6613E5',
+    amount: '120.03'
+  },
+  {
+    address: '0x5A20B3d877e73afAb8906f916DC3744A016e099d',
+    amount: '17.18'
+  },
+  {
+    address: '0x84201E5bACD604894468869fa08626bbAB3Ab2e5',
+    amount: '2500.0'
+  },
+  {
+    address: '0x5064143DBC3A42fF5e2a85468c8cB4036193b4E1',
+    amount: '333.34'
+  },
+  {
+    address: '0x4D1aB06F7827a8472C84421093e9897eC14D15ec',
+    amount: '0.0'
+  },
+  {
+    address: '0xa1205D45167d9E3A35b7BEDdFcfd6AB0d71BaE9a',
+    amount: '0.0'
+  },
+  {
+    address: '0xE81F4C8f351E51E8CFE12554054f1bD6c559cB34',
+    amount: '2500.0'
+  },
+  {
+    address: '0x61a68eE79DaAe8CcE6665b79277c6789e6D15Ad5',
+    amount: '120.0'
+  },
+  {
+    address: '0x0304C96578E9449A847b7B95EB345aAaF5d76BA6',
+    amount: '4314.0'
+  },
+  {
+    address: '0xe812f33e0FfBF0551aDf5045e303aDEeB13De27B',
+    amount: '103334.0'
+  },
+  {
+    address: '0x33a802dB38fD0e886caa2e94872522f96A373dD3',
+    amount: '631.0'
+  },
+  {
+    address: '0xf26b00D5df671D3d11332AEEf109398b3ef08477',
+    amount: '1001.0'
+  },
+  {
+    address: '0x1b54c8D95BEE38ee686E2aD04e69Ad608611EDA0',
+    amount: '3750.0'
+  },
+  {
+    address: '0x151250C7e853e9dBB0D569815201D04FC21cC339',
+    amount: '120.0'
+  }
+]

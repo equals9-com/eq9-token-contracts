@@ -1,0 +1,14 @@
+{
+    "solidity.defaultCompiler": "embedded",
+    "solidity.packageDefaultDependenciesContractsDirectory": "",
+    "solidity.packageDefaultDependenciesDirectory": "node_modules",
+    "cSpell.words": [
+        "Staker",
+        "Stakers",
+        "typechain",
+        "unstake"
+    ],
+    "editor.codeActionsOnSave": {
+        "source.fixAll": true
+    }
+}
