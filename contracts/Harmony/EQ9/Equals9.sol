@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.4;
+pragma solidity 0.8.0;
 
 import "./ERC20.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
@@ -15,7 +15,7 @@ contract Equals9UtilityAndStaking is ERC20 {
     Counters.Counter private stakesAmount;
 
     constructor() ERC20("equals9", "EQ9") {
-        _mint(msg.sender, 1800000000 * (10**decimals()));
+        _mint(msg.sender, 18 * 10 ** 8  * (10**decimals()));
     }
 
     /**
@@ -27,7 +27,7 @@ contract Equals9UtilityAndStaking is ERC20 {
      * @notice A method for a stakeholder to create a stake.
      * @param _stake The size of the stake to be created.
      */
-    function stake(uint256 _stake) public {
+    function stake(uint256 _stake) external {
         if (stakers[msg.sender] == 0) stakesAmount.increment();
         stakers[msg.sender] += _stake;
         _burn(msg.sender, _stake);
@@ -37,7 +37,7 @@ contract Equals9UtilityAndStaking is ERC20 {
      * @notice A method for a stakeholder to create a stake.
      * @param _stake Amount of tokens to unstake.
      */
-    function unstake(uint256 _stake) public {
+    function unstake(uint256 _stake) external {
         stakers[msg.sender] -= _stake;
         if (stakers[msg.sender] == 0) stakesAmount.decrement();
         _mint(msg.sender, _stake);
