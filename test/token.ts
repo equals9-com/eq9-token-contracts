@@ -82,4 +82,10 @@ describe("Equals9UtilityAndStaking", function () {
 
     await expect(eq9.connect(other).unstake("11")).to.be.revertedWith("");
   });
+
+  it("should be able to use public and external functions from ERC20 interface ", async () => {
+    const instance = await ethers.getContractAt("IEQ9", eq9.address);
+    const totalSupply = await instance.totalSupply();
+    console.log("total supply", totalSupply.toString());
+  });
 });
