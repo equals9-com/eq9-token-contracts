@@ -20,6 +20,14 @@ Tests can be run with `npx hardhat test`.
 
 ## Fixes from the audit
 
+### CENT-1 
+
+Doing the timelocks to fix this issue.
+
+
+### EXT-1
+
+Since we might redeploy it, this stops being an issue.
 ### GAS-1
 
 Fixed by shortening require messages in the ERC20 implementation.
@@ -28,7 +36,6 @@ Fixed by shortening require messages in the ERC20 implementation.
 ### GAS-2 
 
 Fixed by changing the following functions types to external:
-
 
 - name (done)
 - symbol -> (done)
@@ -57,6 +64,11 @@ Changed  `1800000000`  to be represented as  `18 * 10 ** 8`
 
 It's not a typo. `amountStakes` is different from `amountStaked`. `amountStakes` is counting the amount of individual 
 stakes that happened, while `amountStaked` is counting the total staked for the contract. The function does the first, it counts how much does it have of each individual stake.
+
+### FUNC-1
+
+Since those are part of the open zeppelin standard contract, I'm leaving them as it is.
+
 
 ## Locking for later reference
 
