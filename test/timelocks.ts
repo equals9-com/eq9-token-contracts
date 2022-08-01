@@ -25,7 +25,7 @@ describe("timelocks", function () {
     const [owner] = await ethers.getSigners();
 
     // We get the contract to deploy
-    const TokenTimeLock = await ethers.getContractFactory("TokenTimelock");
+    const TokenTimeLock = await ethers.getContractFactory("TokenMultiTimelock");
 
     // notice that date is of pattern mm-dd-yyyy
     // seed sales time
