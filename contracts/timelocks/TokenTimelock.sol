@@ -14,7 +14,7 @@ import "@openzeppelin/contracts/utils/Context.sol";
  * Useful for simple vesting schedules like "advisors get all of their tokens
  * after 1 year".
  */
-contract TokenTimelock {
+contract TokenMultiTimelock {
     using SafeERC20 for IERC20;
 
     // ERC20 basic token contract being held
@@ -38,7 +38,10 @@ contract TokenTimelock {
         uint256[] memory _releaseTimes
     ) {
         for (uint256 i = 0; i < _releaseTimes.length; i++) {
-            require(_releaseTimes[i] > block.timestamp, "release is before current time");
+            require(
+                _releaseTimes[i] > block.timestamp,
+                "release is before current time"
+            );
         }
         token = _token;
         beneficiary = _beneficiary;
@@ -46,14 +49,15 @@ contract TokenTimelock {
         currentIndex = 0;
     }
 
-
-
     /**
      * @dev Transfers tokens held by the timelock to the beneficiary. Will only succeed if invoked after the release
      * time. Every release sets the index to the next release.
      */
     function release() external {
-        require(block.timestamp >= releaseTimes[currentIndex], "current time is before release");
+        require(
+            block.timestamp >= releaseTimes[currentIndex],
+            "current time is before release"
+        );
 
         uint256 amount = token.balanceOf(address(this));
         require(amount > 0, "no tokens to release");

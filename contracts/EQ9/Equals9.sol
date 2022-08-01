@@ -15,7 +15,7 @@ contract Equals9UtilityAndStaking is ERC20 {
     Counters.Counter private stakesAmount;
 
     constructor() ERC20("equals9", "EQ9") {
-        _mint(msg.sender, 18 * 10 ** 8  * (10**decimals()));
+        _mint(msg.sender, 18 * 10**8 * (10**decimals()));
     }
 
     /**
