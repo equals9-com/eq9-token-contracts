@@ -18,14 +18,20 @@ contract TokenMultiTimelock {
     using SafeERC20 for IERC20;
 
     // ERC20 basic token contract being held
-    IERC20 private immutable token;
+    IERC20 public immutable token;
 
     // beneficiary of tokens after they are released
-    address private immutable beneficiary;
+    address public immutable beneficiary;
 
     // timestamp when token release is enabled
-    uint256[] private releaseTimes;
+    uint256[] public releaseTimes;
+    
+    // amount to release for each releaseTime
+    uint256[] public releaseAmounts;
+
     uint256 public currentIndex;
+
+    event Release(uint256 amount, address beneficiary, uint256 timestamp, uint256 releaseIndex);
 
     /**
      * @dev Deploys a timelock instance that is able to hold the token specified, and will only release it to
@@ -35,7 +41,8 @@ contract TokenMultiTimelock {
     constructor(
         IERC20 _token,
         address _beneficiary,
-        uint256[] memory _releaseTimes
+        uint256[] memory _releaseTimes,
+        uint256[] memory _releaseAmounts
     ) {
         for (uint256 i = 0; i < _releaseTimes.length; i++) {
             require(
@@ -46,6 +53,7 @@ contract TokenMultiTimelock {
         token = _token;
         beneficiary = _beneficiary;
         releaseTimes = _releaseTimes;
+        releaseAmounts = _releaseAmounts;
         currentIndex = 0;
     }
 
@@ -55,14 +63,19 @@ contract TokenMultiTimelock {
      */
     function release() external {
         require(
+            currentIndex < releaseTimes.length, "no more schedules"
+        );
+        require(
             block.timestamp >= releaseTimes[currentIndex],
-            "current time is before release"
+            "current time is before release"    
         );
 
-        uint256 amount = token.balanceOf(address(this));
-        require(amount > 0, "no tokens to release");
+
+        uint256 amount = releaseAmounts[currentIndex];
 
         token.safeTransfer(beneficiary, amount);
+        emit Release(amount, beneficiary, block.timestamp, currentIndex);
         currentIndex += 1;
+    
     }
 }
