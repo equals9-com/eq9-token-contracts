@@ -39,6 +39,16 @@ const config: HardhatUserConfig = {
       },
     ],
   },
+  networks: {
+    polygon: {
+      url: "https://polygon-rpc.com/",
+      accounts: [String(process.env.PRIVATE_KEY)],
+    },
+    mumbai: {
+      url: "https://rpc-mumbai.matic.today",
+      accounts: [String(process.env.PRIVATE_KEY)],
+    },
+  },
   typechain: {
     outDir: "types",
     target: "ethers-v5",
