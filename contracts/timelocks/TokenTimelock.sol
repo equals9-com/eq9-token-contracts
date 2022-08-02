@@ -44,7 +44,7 @@ contract TokenMultiTimelock {
      * (in seconds).
      */
     constructor(
-        IERC20 _token,
+        address _token,
         address _beneficiary,
         uint256[] memory _releaseTimes,
         uint256[] memory _releaseAmounts,
@@ -56,7 +56,7 @@ contract TokenMultiTimelock {
                 "release is before current time"
             );
         }
-        token = _token;
+        token = IERC20(_token);
         beneficiary = _beneficiary;
         releaseTimes = _releaseTimes;
         releaseAmounts = _releaseAmounts;

@@ -2,7 +2,6 @@ import { ethers, run } from "hardhat";
 
 import { timelockConfigs } from "../config/timelockConfig";
 
-const eq9Address = "0x722F74e982D312Ea3dA57e5571f96dC4C8C3E2eB";
 const getUnixTime = (date: Date): number => {
   return Math.floor(date.getTime() / 1000);
 };
@@ -17,8 +16,9 @@ async function main() {
     ethers.utils.parseUnits(String(monthlyRelease), "ether")
   );
 
+  const eq9Address = "0x63aEB1ECE758F64B24b9386b2ba4D15Ef045712B";
   await run("verify:verify", {
-    address: "0x94DDD68d44B6061B39253854dcDccFB746ca3e48",
+    address: "0x1b1a8E73333C246ff56f082D4fDE7F6499E84Ee5",
     constructorArguments: [
       eq9Address,
       owner.address,

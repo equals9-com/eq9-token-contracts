@@ -2,7 +2,7 @@ import { ethers } from "hardhat";
 import { timelockConfigs } from "../config/timelockConfig";
 import { TokenMultiTimelock } from "../types";
 
-const eq9Address = "0x722F74e982D312Ea3dA57e5571f96dC4C8C3E2eB";
+const eq9Address = "0x63aEB1ECE758F64B24b9386b2ba4D15Ef045712B";
 const getUnixTime = (date: Date): number => {
   return Math.floor(date.getTime() / 1000);
 };
@@ -16,9 +16,9 @@ async function main() {
   const Token = await ethers.getContractFactory("EQ9");
   const eq9 = Token.attach(eq9Address);
 
-  for (let i = 0; i < timelockConfigs.length; i++) {
+  for (let i = 0; i < 1; i++) {
     const [dates, monthlyRelease, totalLocked, name] = timelockConfigs[i];
-    console.log("contract name", name);
+    console.log("contract name:", name);
 
     const TokenTimeLock = await ethers.getContractFactory("TokenMultiTimelock");
 
@@ -37,14 +37,17 @@ async function main() {
     );
 
     await timelock.deployed();
+
     timelocks.push(timelock);
     console.log("timelock deployed", timelock.address);
-    await eq9
+    const res = await eq9
       .connect(owner)
       .transfer(
         timelock.address,
         ethers.utils.parseUnits(String(totalLocked), "ether")
       );
+    const receipt = await res.wait();
+    console.log(receipt);
   }
 }
 
