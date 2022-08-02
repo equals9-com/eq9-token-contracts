@@ -1,5 +1,5 @@
 import { ethers } from "hardhat";
-import { Equals9UtilityAndStaking, TokenMultiTimelock } from "../types";
+import { EQ9, TokenMultiTimelock } from "../types";
 import { expect } from "chai";
 import { seedSalesDates } from "../config/releaseDates";
 
@@ -8,17 +8,15 @@ const getUnixTime = (date: Date): number => {
 };
 
 describe("timelocks", function () {
-  let eq9: Equals9UtilityAndStaking;
+  let eq9: EQ9;
   let timelock: TokenMultiTimelock;
 
   it("Should deploy the eq9 token", async function () {
     const [owner] = await ethers.getSigners();
 
     // We get the contract to deploy
-    const Equals9UtilityAndStaking = await ethers.getContractFactory(
-      "Equals9UtilityAndStaking"
-    );
-    eq9 = await Equals9UtilityAndStaking.deploy();
+    const EQ9 = await ethers.getContractFactory("EQ9");
+    eq9 = await EQ9.deploy();
     await eq9.deployed();
 
     const ownerBalance = await eq9.balanceOf(owner.address);

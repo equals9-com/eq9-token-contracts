@@ -6,15 +6,15 @@ import "./ERC20.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
 /**
- * @title Equals9 (EQ9)
+ * @title EQ9 Token(EQ9)
  * @author Pedro Henrique Bufulin de Almeida
  * @notice Implements a basic ERC20 utility & staking token.
  */
-contract Equals9UtilityAndStaking is ERC20 {
+contract EQ9 is ERC20 {
     using Counters for Counters.Counter;
     Counters.Counter private stakesAmount;
 
-    constructor() ERC20("equals9", "EQ9") {
+    constructor() ERC20("EQ9", "EQ9") {
         _mint(msg.sender, 18 * 10**8 * (10**decimals()));
     }
 

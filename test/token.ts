@@ -1,19 +1,17 @@
 import { ethers } from "hardhat";
-import { Equals9UtilityAndStaking } from "../types";
+import { EQ9 } from "../types";
 import { expect } from "chai";
 
 const decimals = "000000000000000000";
-describe("Equals9UtilityAndStaking", function () {
-  let eq9: Equals9UtilityAndStaking;
+describe("EQ9", function () {
+  let eq9: EQ9;
 
   it("Should deploy the eq9 token", async function () {
     const [owner] = await ethers.getSigners();
 
     // We get the contract to deploy
-    const Equals9UtilityAndStaking = await ethers.getContractFactory(
-      "Equals9UtilityAndStaking"
-    );
-    eq9 = await Equals9UtilityAndStaking.deploy();
+    const EQ9 = await ethers.getContractFactory("EQ9");
+    eq9 = await EQ9.deploy();
     const totalToken = await eq9.balanceOf(owner.address);
     console.log(totalToken.toString());
     await eq9.deployed();
