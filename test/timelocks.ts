@@ -76,6 +76,11 @@ describe("timelocks", function () {
       "left circulating supply",
       (await circulatingSupply).toString()
     );
+
+    // TODO; requires validation with financial
+    expect((await circulatingSupply).toString()).to.be.equal(
+      ethers.utils.parseUnits("383832360", "ether")
+    );
   });
 
   it("should release tokens at each date", async () => {
@@ -113,17 +118,19 @@ describe("timelocks", function () {
     }
   });
 
-  // it("timelock contract eq9 token balance should be 0", async () => {
-  //   // time calculated in seconds. 60 seconds times 60 times 24 to get seconds in a day, times 31
-  //   // to get a month + 1 just to be sure that it's past the release
+  it("should not allow to release after all the releases ", async () => {
+    for (let i = 0; i < timelocks.length; i++) {
+      await expect(timelocks[i].release()).to.be.revertedWith(
+        "no more schedules"
+      );
+    }
+  });
 
-  //   const timelockBalance = await eq9.balanceOf(timelock.address);
-  //   expect(timelockBalance.toString()).to.be.equal(
-  //     ethers.utils.parseUnits("0", "ether")
-  //   );
-  // });
-
-  // it("should not allow to release before the scheduled date", async () => {
-  //   await expect(timelock.release()).to.be.revertedWith("no more schedules");
-  // });
+  it("amount in beneficiary wallet should again be the total supply ", async () => {
+    const [owner] = await ethers.getSigners();
+    const balance = eq9.balanceOf(owner.address);
+    expect((await balance).toString()).to.be.equal(
+      ethers.utils.parseUnits("1800000000", "ether")
+    );
+  });
 });
