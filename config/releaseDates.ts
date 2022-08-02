@@ -1,5 +1,15 @@
 // all dates in format mm/dd/yyyy
 
+// Seed Sales:
+
+// Total locked: 274.823.820 EQ9
+// Liberação mensal: 10.178.660 EQ9
+// 27 vezes
+// Primeira distribuição: 01 - 10 - 2023
+// Última distribuição: 01 - 12 - 2025
+
+export const totalSalesLocked = "274823820";
+export const monthlySeedRelease = "10178660";
 export const seedSalesDates = [
   new Date("10/01/2023"),
   new Date("11/01/2023"),
@@ -38,6 +48,8 @@ export const seedSalesDates = [
 // Primeira distribuição: 01 - 01 - 2023
 // Última distribuição: 01 - 03 - 2025
 
+export const totalHarvestLocked = "293166000";
+export const monthlyHarvestRelease = "10858000";
 export const harvestDates = [
   new Date("01/01/2023"),
   new Date("02/01/2023"),
@@ -76,6 +88,8 @@ export const harvestDates = [
 // Primeira distribuição: 01 - 01 - 2023
 // Última distribuição: 01 - 12 - 2023
 
+export const totalIdoLocked = "232200000";
+export const monthlyIdoRelease = "11400000";
 export const IdoEdoDates = [
   new Date("01/01/2023"),
   new Date("02/01/2023"),
@@ -99,6 +113,8 @@ export const IdoEdoDates = [
 // Primeira distribuição: 01 - 01 - 2023
 // Última distribuição: 01 - 09 - 2025
 
+export const totalMarketingLocked = "261377820";
+export const monthlyMarketingRelease = "7920540";
 export const MarketingDates = [
   new Date("01/01/2023"),
   new Date("02/01/2023"),
@@ -143,6 +159,8 @@ export const MarketingDates = [
 // Primeira distribuição: 01 - 01 - 2023
 // Última distribuição: 01 - 12 - 2025
 
+export const totalSocialLocked = "450000000";
+export const monthlySocialRelease = "12500000";
 export const SocialDates = [
   new Date("01/01/2023"),
   new Date("02/01/2023"),

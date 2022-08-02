@@ -45,7 +45,7 @@ const config: HardhatUserConfig = {
       accounts: [String(process.env.PRIVATE_KEY)],
     },
     mumbai: {
-      url: "https://rpc-mumbai.matic.today",
+      url: "https://matic-mumbai.chainstacklabs.com",
       accounts: [String(process.env.PRIVATE_KEY)],
     },
   },

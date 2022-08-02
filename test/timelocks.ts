@@ -1,7 +1,7 @@
 import { ethers } from "hardhat";
 import { EQ9, TokenMultiTimelock } from "../types";
 import { expect } from "chai";
-import { seedSalesDates } from "../config/releaseDates";
+import { seedSalesDates, harvestDates } from "../config/releaseDates";
 
 const getUnixTime = (date: Date): number => {
   return Math.floor(date.getTime() / 1000);
@@ -62,13 +62,8 @@ describe("timelocks", function () {
   it("should deploy the harvesting timelock with the eq9 token for the harvest", async () => {
     const [owner] = await ethers.getSigners();
 
-    // We get the contract to deploy
     const TokenTimeLock = await ethers.getContractFactory("TokenMultiTimelock");
-
-    // notice that date is of pattern mm-dd-yyyy
-    // seed sales time
-
-    const releaseTimesUnix = seedSalesDates.map((i) => getUnixTime(i));
+    const releaseTimesUnix = harvestDates.map((i) => getUnixTime(i));
 
     const releaseAmounts = releaseTimesUnix.map(() =>
       ethers.utils.parseUnits("10178660", "ether")
@@ -105,7 +100,6 @@ describe("timelocks", function () {
 
     for (let i = 0; i < seedSalesDates.length; i++) {
       await ethers.provider.send("evm_mine", [getUnixTime(seedSalesDates[i])]);
-
       const releaseAmount = await timelock.releaseAmounts(i);
       console.log(releaseAmount.toString());
       const tx = await timelock.release();
