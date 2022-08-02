@@ -47,7 +47,42 @@ describe("timelocks", function () {
       eq9.address,
       owner.address,
       releaseTimesUnix,
-      releaseAmounts
+      releaseAmounts,
+      "seed sales"
+    );
+
+    await timelock.deployed();
+
+    await eq9
+      .connect(owner)
+      .transfer(
+        timelock.address,
+        ethers.utils.parseUnits("274823820", "ether")
+      );
+  });
+
+  it("should deploy the harvesting timelock with the eq9 token for the harvest", async () => {
+    const [owner] = await ethers.getSigners();
+
+    // We get the contract to deploy
+    const TokenTimeLock = await ethers.getContractFactory("TokenMultiTimelock");
+
+    // notice that date is of pattern mm-dd-yyyy
+    // seed sales time
+
+    const releaseTimesUnix = seedSalesDates.map((i) => getUnixTime(i));
+
+    const releaseAmounts = releaseTimesUnix.map(() =>
+      ethers.utils.parseUnits("10178660", "ether")
+    );
+
+    console.log(releaseAmounts);
+    timelock = await TokenTimeLock.deploy(
+      eq9.address,
+      owner.address,
+      releaseTimesUnix,
+      releaseAmounts,
+      "harvest"
     );
 
     await timelock.deployed();

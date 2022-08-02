@@ -12,7 +12,7 @@ import "@openzeppelin/contracts/utils/Context.sol";
  * tokens after a given release time.
  *
  * Useful for simple vesting schedules like "advisors get all of their tokens
- * after 1 year".
+ * after 1 year" and release schedules are monthly.
  */
 contract TokenMultiTimelock {
     using SafeERC20 for IERC20;
@@ -25,13 +25,22 @@ contract TokenMultiTimelock {
 
     // timestamp when token release is enabled
     uint256[] public releaseTimes;
-    
+
     // amount to release for each releaseTime
     uint256[] public releaseAmounts;
 
+    // index of the next release
     uint256 public currentIndex;
 
-    event Release(uint256 amount, address beneficiary, uint256 timestamp, uint256 releaseIndex);
+    // name of the contract
+    string public name;
+
+    event Release(
+        uint256 amount,
+        address beneficiary,
+        uint256 timestamp,
+        uint256 releaseIndex
+    );
 
     /**
      * @dev Deploys a timelock instance that is able to hold the token specified, and will only release it to
@@ -42,7 +51,8 @@ contract TokenMultiTimelock {
         IERC20 _token,
         address _beneficiary,
         uint256[] memory _releaseTimes,
-        uint256[] memory _releaseAmounts
+        uint256[] memory _releaseAmounts,
+        string memory _name
     ) {
         for (uint256 i = 0; i < _releaseTimes.length; i++) {
             require(
@@ -54,6 +64,7 @@ contract TokenMultiTimelock {
         beneficiary = _beneficiary;
         releaseTimes = _releaseTimes;
         releaseAmounts = _releaseAmounts;
+        name = _name;
         currentIndex = 0;
     }
 
@@ -62,20 +73,16 @@ contract TokenMultiTimelock {
      * time. Every release sets the index to the next release.
      */
     function release() external {
-        require(
-            currentIndex < releaseTimes.length, "no more schedules"
-        );
+        require(currentIndex < releaseTimes.length, "no more schedules");
         require(
             block.timestamp >= releaseTimes[currentIndex],
-            "current time is before release"    
+            "current time is before release"
         );
-
 
         uint256 amount = releaseAmounts[currentIndex];
 
         token.safeTransfer(beneficiary, amount);
         emit Release(amount, beneficiary, block.timestamp, currentIndex);
         currentIndex += 1;
-    
     }
 }
