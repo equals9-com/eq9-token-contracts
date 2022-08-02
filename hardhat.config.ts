@@ -9,6 +9,8 @@ import "solidity-coverage";
 
 dotenv.config();
 
+const { PRIVATE_KEY, SCAN_KEY } = process.env;
+
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
 task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
@@ -42,12 +44,15 @@ const config: HardhatUserConfig = {
   networks: {
     polygon: {
       url: "https://polygon-rpc.com/",
-      accounts: [String(process.env.PRIVATE_KEY)],
+      accounts: [String(PRIVATE_KEY)],
     },
     mumbai: {
       url: "https://matic-mumbai.chainstacklabs.com",
-      accounts: [String(process.env.PRIVATE_KEY)],
+      accounts: [String(PRIVATE_KEY)],
     },
+  },
+  etherscan: {
+    apiKey: String(SCAN_KEY),
   },
   typechain: {
     outDir: "types",
