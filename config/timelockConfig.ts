@@ -82,13 +82,13 @@ export const harvestDates = [
 
 // IDO/IEOs:
 
-// Total Locked: 232.200.000 EQ9
+// Total Locked: 136.680.000 EQ9
 // Liberação mensal: 11.400.000 EQ9
 // 12 vezes
 // Primeira distribuição: 01 - 01 - 2023
 // Última distribuição: 01 - 12 - 2023
 
-export const totalIdoLocked = "232200000";
+export const totalIdoLocked = "136800000";
 export const monthlyIdoRelease = "11400000";
 export const IdoEdoDates = [
   new Date("01/01/2023"),
@@ -198,4 +198,17 @@ export const SocialDates = [
   new Date("10/01/2025"),
   new Date("11/01/2025"),
   new Date("12/01/2025"),
+];
+
+export const timelockConfigs = [
+  [seedSalesDates, monthlySeedRelease, totalSalesLocked, "seed sales timelock"],
+  [harvestDates, monthlyHarvestRelease, totalHarvestLocked, "harvest timelock"],
+  [IdoEdoDates, monthlyIdoRelease, totalIdoLocked, "Ido/EDO timelock"],
+  [
+    MarketingDates,
+    monthlyMarketingRelease,
+    totalMarketingLocked,
+    "marketing timelock",
+  ],
+  [SocialDates, monthlySocialRelease, totalSocialLocked, "social timelock"],
 ];
