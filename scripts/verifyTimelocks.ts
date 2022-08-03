@@ -8,17 +8,17 @@ const getUnixTime = (date: Date): number => {
 
 async function main() {
   const [owner] = await ethers.getSigners();
-  const [dates, monthlyRelease, name] = timelockConfigs[0];
+  const [dates, monthlyRelease, , name] = timelockConfigs[3];
 
   const releaseTimesUnix = (dates as Date[]).map((i) => getUnixTime(i));
 
   const releaseAmounts = releaseTimesUnix.map(() =>
-    ethers.utils.parseUnits(String(monthlyRelease), "ether")
+    ethers.utils.parseUnits(String(monthlyRelease), "ether").toString()
   );
 
-  const eq9Address = "0x63aEB1ECE758F64B24b9386b2ba4D15Ef045712B";
+  const eq9Address = "0x92Eb8508B3fE93832B0D3427cD19bf6E5df45654";
   await run("verify:verify", {
-    address: "0x1b1a8E73333C246ff56f082D4fDE7F6499E84Ee5",
+    address: " 0x5a5eb73be1c2217b0bde18a9f768910d33171759",
     constructorArguments: [
       eq9Address,
       owner.address,
