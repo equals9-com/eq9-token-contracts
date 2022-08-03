@@ -13,10 +13,10 @@ async function main() {
   console.log("balance", balance.toString());
 
   const Token = await ethers.getContractFactory("EQ9");
-  const eq9Address = "0x92Eb8508B3fE93832B0D3427cD19bf6E5df45654";
+  const eq9Address = "0x2Fdc13eb83D95952d487306b9e252602085E3426";
   const eq9 = Token.attach(eq9Address);
 
-  for (let i = 4; i < 5; i++) {
+  for (let i = 0; i < timelockConfigs.length; i++) {
     const [dates, monthlyRelease, totalLocked, name] = timelockConfigs[i];
 
     const TokenTimeLock = await ethers.getContractFactory("TokenMultiTimelock");
@@ -26,14 +26,6 @@ async function main() {
     const releaseAmounts = releaseTimesUnix.map(() =>
       ethers.utils.parseUnits(String(monthlyRelease), "ether").toString()
     );
-
-    console.log([
-      eq9.address,
-      owner.address,
-      releaseTimesUnix,
-      releaseAmounts,
-      String(name),
-    ]);
 
     const timelock = await TokenTimeLock.deploy(
       eq9.address,
@@ -53,7 +45,7 @@ async function main() {
         timelock.address,
         ethers.utils.parseUnits(String(totalLocked), "ether")
       );
-    console.log(res);
+    console.log("transaction hash", res.hash);
   }
 }
 

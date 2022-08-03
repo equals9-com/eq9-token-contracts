@@ -4,12 +4,21 @@ This repository contains the source code and a small test file to test the custo
 the eq9 token.
 
 
-## deployed contract address
+## deployed contracts addresses
 
 The contract is deployed in the following addres: `0x598228643d6faa1b5569c3d996cb8cf8ca1fdb92`
 on the harmony mainnet network.
 
 You can check it on the explorer: https://explorer.harmony.one/address/0x598228643d6faa1b5569c3d996cb8cf8ca1fdb92
+
+Since we are changing the token, here are the timelocks and the token, deployed on mumbai testnet:
+
+https://mumbai.polygonscan.com/token/0x2Fdc13eb83D95952d487306b9e252602085E3426#balances
+
+It's possible to see that each contract addresses respects the amount to be released by the timelocks.
+
+https://mumbai.polygonscan.com/token/tokenholderchart/0x2Fdc13eb83D95952d487306b9e252602085E3426
+
 
 ## testing 
 
@@ -22,12 +31,12 @@ Tests can be run with `npx hardhat test`.
 
 ### CENT-1 
 
-Doing the timelocks to fix this issue.
-
+Doing the timelocks to fix this issue. Timelcoks are described in the end of this document.
 
 ### EXT-1
 
 Since we might redeploy it, this stops being an issue.
+
 ### GAS-1
 
 Fixed by shortening require messages in the ERC20 implementation.
@@ -42,7 +51,7 @@ Fixed by changing the following functions types to external:
 - totalSupply -> (done)
 - balanceOf -> (done)
 - transfer -> (done)
-- allowance -> (requires review, is it really the case to change it to external?)
+- allowance -> (left as public for easier testing)
 - approve -> (done)
 - transferFrom -> (done)
 - increaseAllowance -> (done)
@@ -127,3 +136,5 @@ Last distribution : 01 - 12 - 2025
 
 
 More details here: https://equals9.com/documents/TOKENOMICS_ENGLISH.pdf
+
+
