@@ -126,3 +126,4 @@ Last distribution : 01 - 12 - 2025
 
 
 
+More details here: https://equals9.com/documents/TOKENOMICS_ENGLISH.pdf
