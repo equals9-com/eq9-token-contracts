@@ -72,48 +72,57 @@ Since those are part of the open zeppelin standard contract, I'm leaving them as
 
 ## Locking for later reference
 
-Vesting Contracts 
+Please acknowledge that the dates are of the format `dd - mm - yyyy`
+Vesting Contracts:
+
 
 Seed Sales: 
 
 Total locked: 274.823.820 EQ9
-Liberação mensal: 10.178.660 EQ9
-27 vezes
-Primeira distribuição: 01 - 10 - 2023
-Última distribuição: 01 - 12 - 2025
+Monthly release: 10.178.660 EQ9
+(27 times)
+First distribution: 01 - 10 - 2023
+
+Last distribution : 01 - 12 - 202:
+
 
 Harvesting: 
 
 Total locked: 293.166.000 EQ9
-Liberação mensal: 10.858.000 EQ9
-27 vezes
-Primeira distribuição: 01 - 01 - 2023
-Última distribuição: 01 - 03 - 2025
+Monthly release: 10.858.000 EQ9
+(27 times)
+First distribution: 01 - 01 - 2023
 
-IDO/IEOs: 
+Last distribution : 01 - 03 - 2025:IDO/IEOs: 
 
-Total Locked: 232.200.000 EQ9
-Liberação mensal: 11.400.000 EQ9
-12 vezes
-Primeira distribuição: 01 - 01 - 2023
-Última distribuição: 01 - 12 - 2023
+
+
+
+Total Locked: 136.680.000 EQ9
+Monthly release: 11.400.000 EQ9
+(12 times)
+First distribution: 01 - 01 - 2023
+
+Last distribution : 01 - 12 - 2023:
 
 
 Marketing&Partnership: 
 
 Total Locked: 261.377.820 EQ9
-Liberação mensal:  7.920.540 EQ9
-33 vezes
-Primeira distribuição: 01 - 01 - 2023
-Última distribuição: 01 - 09 - 2025
+Monthly release:  7.920.540 EQ9
+(33 times)
+First distribution: 01 - 01 - 2023
+
+Last distribution : 01 - 09 - 202:
+
 
 Social Projects: 
 
 Total Locked: 450.000.000 EQ9
-Liberação mensal: 12.500.000 EQ9
-36 vezes
-Primeira distribuição: 01 - 01 - 2023
-Última distribuição: 01 - 12 - 2025
+Monthly release: 12.500.000 EQ9
+(36 times)
+First distribution: 01 - 01 - 2023
+Last distribution : 01 - 12 - 2025
 
 
 
