@@ -25,6 +25,30 @@ describe("timelocks", function () {
     );
   });
 
+  it("Should not deploy timelock on array length mismatch", async function () {
+    const [owner] = await ethers.getSigners();
+    const [dates, monthlyRelease, , name] = timelockConfigs[0];
+    const TokenTimeLock = await ethers.getContractFactory("TokenMultiTimelock");
+
+    const releaseTimesUnix = (dates as Date[]).map((date) => getUnixTime(date));
+
+    const releaseAmounts = releaseTimesUnix.map(() =>
+      ethers.utils.parseUnits(String(monthlyRelease), "ether")
+    );
+
+    releaseAmounts.pop();
+
+    expect(
+      TokenTimeLock.deploy(
+        eq9.address,
+        owner.address,
+        releaseTimesUnix,
+        releaseAmounts,
+        String(name)
+      )
+    ).to.be.revertedWith("length mismatch between arrays");
+  });
+
   it("should deploy each one of these timelocks: sales, harvest, Ido/Edo, Marketing, Social", async () => {
     const [owner] = await ethers.getSigners();
 
@@ -35,7 +59,9 @@ describe("timelocks", function () {
         "TokenMultiTimelock"
       );
 
-      const releaseTimesUnix = (dates as Date[]).map((i) => getUnixTime(i));
+      const releaseTimesUnix = (dates as Date[]).map((date) =>
+        getUnixTime(date)
+      );
 
       const releaseAmounts = releaseTimesUnix.map(() =>
         ethers.utils.parseUnits(String(monthlyRelease), "ether")
