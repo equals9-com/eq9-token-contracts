@@ -4,12 +4,21 @@ This repository contains the source code and a small test file to test the custo
 the eq9 token.
 
 
-## deployed contract address
+## deployed contracts addresses
 
 The contract is deployed in the following addres: `0x598228643d6faa1b5569c3d996cb8cf8ca1fdb92`
 on the harmony mainnet network.
 
 You can check it on the explorer: https://explorer.harmony.one/address/0x598228643d6faa1b5569c3d996cb8cf8ca1fdb92
+
+Since we are changing the token, here are the timelocks and the token, deployed on mumbai testnet:
+
+https://mumbai.polygonscan.com/token/0x2Fdc13eb83D95952d487306b9e252602085E3426#balances
+
+It's possible to see that each contract addresses respects the amount to be released by the timelocks.
+
+https://mumbai.polygonscan.com/token/tokenholderchart/0x2Fdc13eb83D95952d487306b9e252602085E3426
+
 
 ## testing 
 
@@ -22,12 +31,12 @@ Tests can be run with `npx hardhat test`.
 
 ### CENT-1 
 
-Doing the timelocks to fix this issue.
-
+Doing the timelocks to fix this issue. Timelcoks are described in the end of this document.
 
 ### EXT-1
 
 Since we might redeploy it, this stops being an issue.
+
 ### GAS-1
 
 Fixed by shortening require messages in the ERC20 implementation.
@@ -42,7 +51,7 @@ Fixed by changing the following functions types to external:
 - totalSupply -> (done)
 - balanceOf -> (done)
 - transfer -> (done)
-- allowance -> (requires review, is it really the case to change it to external?)
+- allowance -> (left as public for easier testing)
 - approve -> (done)
 - transferFrom -> (done)
 - increaseAllowance -> (done)
@@ -72,48 +81,60 @@ Since those are part of the open zeppelin standard contract, I'm leaving them as
 
 ## Locking for later reference
 
-Vesting Contracts 
+Please acknowledge that the dates are of the format `dd - mm - yyyy`
+Vesting Contracts:
+
 
 Seed Sales: 
 
 Total locked: 274.823.820 EQ9
-Liberação mensal: 10.178.660 EQ9
-27 vezes
-Primeira distribuição: 01 - 10 - 2023
-Última distribuição: 01 - 12 - 2025
+Monthly release: 10.178.660 EQ9
+(27 times)
+First distribution: 01 - 10 - 2023
+
+Last distribution : 01 - 12 - 202:
+
 
 Harvesting: 
 
 Total locked: 293.166.000 EQ9
-Liberação mensal: 10.858.000 EQ9
-27 vezes
-Primeira distribuição: 01 - 01 - 2023
-Última distribuição: 01 - 03 - 2025
+Monthly release: 10.858.000 EQ9
+(27 times)
+First distribution: 01 - 01 - 2023
 
-IDO/IEOs: 
+Last distribution : 01 - 03 - 2025:IDO/IEOs: 
 
-Total Locked: 232.200.000 EQ9
-Liberação mensal: 11.400.000 EQ9
-12 vezes
-Primeira distribuição: 01 - 01 - 2023
-Última distribuição: 01 - 12 - 2023
+
+
+
+Total Locked: 136.680.000 EQ9
+Monthly release: 11.400.000 EQ9
+(12 times)
+First distribution: 01 - 01 - 2023
+
+Last distribution : 01 - 12 - 2023:
 
 
 Marketing&Partnership: 
 
 Total Locked: 261.377.820 EQ9
-Liberação mensal:  7.920.540 EQ9
-33 vezes
-Primeira distribuição: 01 - 01 - 2023
-Última distribuição: 01 - 09 - 2025
+Monthly release:  7.920.540 EQ9
+(33 times)
+First distribution: 01 - 01 - 2023
+
+Last distribution : 01 - 09 - 202:
+
 
 Social Projects: 
 
 Total Locked: 450.000.000 EQ9
-Liberação mensal: 12.500.000 EQ9
-36 vezes
-Primeira distribuição: 01 - 01 - 2023
-Última distribuição: 01 - 12 - 2025
+Monthly release: 12.500.000 EQ9
+(36 times)
+First distribution: 01 - 01 - 2023
+Last distribution : 01 - 12 - 2025
 
+
+
+More details here: https://equals9.com/documents/TOKENOMICS_ENGLISH.pdf
 
 
