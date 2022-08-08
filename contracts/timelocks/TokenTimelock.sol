@@ -50,6 +50,10 @@ contract TokenMultiTimelock {
         uint256[] memory _releaseAmounts,
         string memory _name
     ) {
+        require(
+            _releaseTimes.length == _releaseAmounts.length,
+            "length mismatch between arrays"
+        );
         for (uint256 i = 0; i < _releaseTimes.length; i++) {
             require(
                 _releaseTimes[i] > block.timestamp,
@@ -79,6 +83,5 @@ contract TokenMultiTimelock {
         currentIndex += 1;
         token.safeTransfer(beneficiary, amount);
         emit Release(amount, beneficiary, block.timestamp, currentIndex);
-
     }
 }
