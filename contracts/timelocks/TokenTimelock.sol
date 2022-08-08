@@ -76,9 +76,9 @@ contract TokenMultiTimelock {
         );
 
         uint256 amount = releaseAmounts[currentIndex];
-
+        currentIndex += 1;
         token.safeTransfer(beneficiary, amount);
         emit Release(amount, beneficiary, block.timestamp, currentIndex);
-        currentIndex += 1;
+
     }
 }
