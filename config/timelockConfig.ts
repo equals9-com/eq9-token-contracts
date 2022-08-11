@@ -201,14 +201,39 @@ export const SocialDates = [
 ];
 
 export const timelockConfigs = [
-  [seedSalesDates, monthlySeedRelease, totalSalesLocked, "Private Sales"],
-  [harvestDates, monthlyHarvestRelease, totalHarvestLocked, "Harvesting"],
-  [IdoEdoDates, monthlyIdoRelease, totalIdoLocked, "IEO/IDO"],
+  [
+    seedSalesDates,
+    monthlySeedRelease,
+    totalSalesLocked,
+    "Private Sales",
+    "0xBAE1773BC074ED8584A8033d12083BeBbf7FAB77",
+  ],
+  [
+    harvestDates,
+    monthlyHarvestRelease,
+    totalHarvestLocked,
+    "Harvesting",
+    "0x8699D049EbEcCDeCC941E23633CaE82684634182",
+  ],
+  [
+    IdoEdoDates,
+    monthlyIdoRelease,
+    totalIdoLocked,
+    "IEO/IDO",
+    "0x775494DD6CFC1eACDaFC43E369A42d72bCF20e2B",
+  ],
   [
     MarketingDates,
     monthlyMarketingRelease,
     totalMarketingLocked,
     "Marketing & Partnerships",
+    "0xDa1983547E75A13fa9D632c658DA059974760D24",
   ],
-  [SocialDates, monthlySocialRelease, totalSocialLocked, "Social Projects"],
+  [
+    SocialDates,
+    monthlySocialRelease,
+    totalSocialLocked,
+    "Social Projects",
+    "0x64Aa1ED1D1E05dF973F3e097d540C563f8350eda",
+  ],
 ];
