@@ -9,7 +9,7 @@ import "solidity-coverage";
 
 dotenv.config();
 
-const { PRIVATE_KEY, SCAN_KEY, RPC_URL } = process.env;
+const { PRIVATE_KEY, SCAN_KEY, MUMBAI_RPC_URL, POLYGON_RPC_URL } = process.env;
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
@@ -46,11 +46,11 @@ const config: HardhatUserConfig = {
   },
   networks: {
     polygon: {
-      url: "https://polygon-rpc.com/",
+      url: String(POLYGON_RPC_URL),
       accounts: [String(PRIVATE_KEY)],
     },
     mumbai: {
-      url: String(RPC_URL),
+      url: String(MUMBAI_RPC_URL),
       accounts: [String(PRIVATE_KEY)],
     },
   },

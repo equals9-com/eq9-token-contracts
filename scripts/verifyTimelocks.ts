@@ -7,21 +7,20 @@ const getUnixTime = (date: Date): number => {
 };
 
 async function main() {
-  const [owner] = await ethers.getSigners();
-
-  const eq9Address = "0x2Fdc13eb83D95952d487306b9e252602085E3426";
+  const eq9Address = "0x3963a400b42377376d6c3d92Ddf2d6288D8EE0d6";
 
   const addresses = [
-    "0x0b7eC9d558A7B1505C84CAaf8Ee20479326F7917",
-    "0x2DE96736a7e679bA5ABaE7e84dDf0D0DC1E43AfA",
-    "0xF0e305856652F2f493eCd0f7243b1414DA68C7f0",
-    "0xc6cB4e65B2E07eED241C2f7147038e6E9fF66Be4",
-    "0x43ceEA8398be99ECAf2245872d2C8E004c8B343c",
+    "0x90E49f5fFCe602ec7Aefd7471cc307fD2C901061",
+    "0xaA6376064C8351C961077B9d4d1aA6365e71C99f",
+    "0x28C1a012a5c6de345F6eaC4BC41F31473aaC1A26",
+    "0x6860e99e12106973D55308aC967F9B1554750ebC",
+    "0x249cdF757A499145AF6a2b3a3d31Ffe9De3C8cd5",
   ];
 
   for (let i = 0; i < timelockConfigs.length; i++) {
     try {
-      const [dates, monthlyRelease, , name] = timelockConfigs[i];
+      const [dates, monthlyRelease, , name, beneficiaryAddress] =
+        timelockConfigs[i];
 
       const releaseTimesUnix = (dates as Date[]).map((d) => getUnixTime(d));
 
@@ -32,7 +31,7 @@ async function main() {
         address: addresses[i],
         constructorArguments: [
           eq9Address,
-          owner.address,
+          beneficiaryAddress,
           releaseTimesUnix,
           releaseAmounts,
           String(name),

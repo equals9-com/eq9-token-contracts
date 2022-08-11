@@ -3,7 +3,7 @@ import { ethers } from "hardhat";
 async function main() {
   const [owner] = await ethers.getSigners();
   const balance = await owner.getBalance();
-  console.log(balance.toString());
+  console.log("current balance", balance.toString());
 
   const Token = await ethers.getContractFactory("EQ9");
   const erc20 = await Token.deploy();
