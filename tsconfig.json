@@ -8,6 +8,6 @@
     "resolveJsonModule": true,
     "declaration": true
   },
-  "include": ["./scripts", "scripts/test", "./types", "config/timelockConfig.ts"],
+  "include": ["./scripts", "scripts/test", "./test", "./types", "config/timelockConfig.ts"],
   "files": ["./hardhat.config.ts"]
 }

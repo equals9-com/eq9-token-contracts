@@ -11,6 +11,7 @@
     "@nomiclabs/hardhat-ethers": "^2.0.2",
     "@nomiclabs/hardhat-etherscan": "^3.1.0",
     "@nomiclabs/hardhat-waffle": "^2.0.1",
+    "@types/chai-as-promised": "^7.1.5",
     "@openzeppelin/contracts": "^4.7.2",
     "@typechain/ethers-v5": "^7.2.0",
     "@typechain/hardhat": "^2.3.1",
@@ -44,6 +45,7 @@
   },
   "dependencies": {
     "@harmony-js/crypto": "^0.1.56",
+    "chai-as-promised": "^7.1.1",
     "web3": "^1.6.1"
   }
 }
