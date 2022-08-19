@@ -570,6 +570,14 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
 
      */
     function version() public pure returns (string memory) {
-        return "1.4.0";
+        return "1.5.0";
+    }
+
+    function pause() public onlyOwner {
+        _pause();
+    }
+
+    function unpause() public onlyOwner {
+        _unpause();
     }
 }

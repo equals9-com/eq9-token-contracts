@@ -334,7 +334,7 @@ describe("Tournament with native token as subscription", async function () {
   });
 
   it("should be able to check version", async () => {
-    expect(await tournamentManager.version()).to.be.equal("1.4.0");
+    expect(await tournamentManager.version()).to.be.equal("1.5.0");
   });
 
   it("should be able to set waiting state giving its tournament id", async () => {
@@ -367,5 +367,20 @@ describe("Tournament with native token as subscription", async function () {
       .be.reverted;
   });
 
-  it("should not allow non owner to pause", async () => {});
+  it("should not allow non owner to pause", async () => {
+    const accounts = await ethers.getSigners();
+    await expect(
+      tournamentManager.connect(accounts[1]).pause()
+    ).to.be.revertedWith("Ownable: caller is not the owner");
+  });
+
+  it("should allow the owner to pause", async () => {
+    await tournamentManager.pause();
+  });
+
+  it("should not allow tournament creation if contract is paused", async () => {
+    await expect(
+      tournamentManager.createTournament("10", ethers.constants.AddressZero)
+    ).to.be.revertedWith("Pausable: paused");
+  });
 });
