@@ -57,7 +57,7 @@ describe("Tournament with a prize added and free subscription ", async function 
   });
 
   it("should be able to check version", async () => {
-    expect(await tournamentManager.version()).to.be.equal("1.2.0");
+    expect(await tournamentManager.version()).to.be.equal("1.3.0");
   });
 
   it("the admin should be able to split rewards", async function () {

@@ -337,7 +337,7 @@ describe("Tournament with native token as subscription", async function () {
   });
 
   it("should be able to check version", async () => {
-    expect(await tournamentManager.version()).to.be.equal("1.2.0");
+    expect(await tournamentManager.version()).to.be.equal("1.3.0");
   });
 
   it("should be able to set waiting state giving its tournament id", async () => {

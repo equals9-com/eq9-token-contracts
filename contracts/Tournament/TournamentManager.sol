@@ -80,18 +80,19 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
     event PayeeAdded(address account, uint256 shares);
     event PaymentReleased(address to, uint256 amount);
     event PaymentReceived(address from, uint256 amount);
-    event prizeIncreased(uint256 indexed id, address sender, uint256 prize, address tokenAddress);
+    event prizeIncreased(
+        uint256 indexed id,
+        address sender,
+        uint256 prize,
+        address tokenAddress
+    );
     event PlayerJoined(
         uint256 indexed id,
         address player,
         uint256 subscription,
         address token
     );
-    event PlayerExited(
-        uint256 indexed id,
-        address player,
-        uint256 subscription
-    );
+    event PlayerExited(uint256 indexed id, address player);
 
     /**
      * @dev Creates an instance of the TournamentManager
@@ -100,7 +101,6 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
     constructor() {
         name = "Tournament Manager Contract";
     }
-
 
     /**
      * @dev creates a tournament and associates it to an id. The sender is the administrator of this
@@ -121,7 +121,9 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
         newTournament.admin = msg.sender;
         newTournament.state = TournamentState.Waiting;
         newTournament.tokenFee = _fee;
-        newTournament.token = _token == address(0) ? IERC20(address(0)) : IERC20(_token);
+        newTournament.token = _token == address(0)
+            ? IERC20(address(0))
+            : IERC20(_token);
         tournaments[currentId] = newTournament;
         id.increment();
         emit TournamentCreated(currentId);
@@ -134,15 +136,19 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
      * @param _id the id of the tournament to cancel.
      */
 
-    function cancelTournament(uint256 _id) public payable onlyAdmin(_id)  {
+    function cancelTournament(uint256 _id) public payable onlyAdmin(_id) {
         Tournament storage tournament = tournaments[_id];
         tournament.state = TournamentState.Ended;
         for (uint256 i = 0; i < players[_id].length; i++) {
             if (subscription[_id][players[_id][i].walletAddress] == 0) continue;
             _cancelSubscription(_id, payable(players[_id][i].walletAddress));
         }
-        for(uint256 i=0; i<sponsors[_id].length; i++){
-            _returnSponsorsTokens(_id,payable (sponsors[_id][i].walletAddress), sponsors[_id][i].amount);
+        for (uint256 i = 0; i < sponsors[_id].length; i++) {
+            _returnSponsorsTokens(
+                _id,
+                payable(sponsors[_id][i].walletAddress),
+                sponsors[_id][i].amount
+            );
         }
         emit TournamentCanceled(_id);
     }
@@ -163,16 +169,20 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
         subscription[_id][_subscriber] = 0;
         tournament.totalAccTokenReward -= refund;
 
-
-        if(tournament.token == IERC20(address(0))) { 
+        if (tournament.token == IERC20(address(0))) {
             Address.sendValue(_subscriber, refund);
             emit SubscriptionCancelled(_id, _subscriber, refund, address(0));
         } else {
             tournament.token.safeTransfer(_subscriber, refund);
-            emit SubscriptionCancelled(_id, _subscriber, refund, address(tournament.token));
+            emit SubscriptionCancelled(
+                _id,
+                _subscriber,
+                refund,
+                address(tournament.token)
+            );
         }
     }
-    
+
     /**
      * @dev this funciton increases readability. It's only used in the cancelTournament() method,
      * and it sends back the refund for the player that joined a cancelled tournament
@@ -180,19 +190,25 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
      * @param _sponsor the sponsor that will receive back it's funds
      * @param _amount the amount of tokens used to sponsor the tournament
      */
-    function _returnSponsorsTokens(uint256 _id,address payable _sponsor, uint256 _amount) 
-        private
-        nonReentrant
-    {
+    function _returnSponsorsTokens(
+        uint256 _id,
+        address payable _sponsor,
+        uint256 _amount
+    ) private nonReentrant {
         Tournament storage tournament = tournaments[_id];
-        if(tournament.token == IERC20(address(0))) {
+        if (tournament.token == IERC20(address(0))) {
             Address.sendValue(_sponsor, _amount);
             tournament.totalAccTokenReward -= _amount;
             emit SubscriptionCancelled(_id, _sponsor, _amount, address(0));
         } else {
             tournament.token.safeTransfer(_sponsor, _amount);
             tournament.totalAccTokenReward -= _amount;
-            emit SubscriptionCancelled(_id, _sponsor, _amount, address(tournament.token));
+            emit SubscriptionCancelled(
+                _id,
+                _sponsor,
+                _amount,
+                address(tournament.token)
+            );
         }
     }
 
@@ -231,7 +247,12 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
      * registered as participant of the tournament.
      * @param _id the id of the tournament to join
      */
-    function join(uint256 _id) public payable nonReentrant onlyNetworkToken(_id) {
+    function join(uint256 _id)
+        public
+        payable
+        nonReentrant
+        onlyNetworkToken(_id)
+    {
         Tournament storage tournament = tournaments[_id];
         require(
             tournament.state == TournamentState.Waiting,
@@ -252,8 +273,6 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
         emit PlayerJoined(_id, msg.sender, msg.value, address(0));
     }
 
-
-
     /**
      * @notice use this function to join the tournment.
      * It is necessary to pay the native token fee otherwise the player won't be
@@ -261,21 +280,22 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
      * @param _id the id of the tournament to join
      * @param _amount the ERC20 token amount used to transfer to the contract
      */
-    function joinERC20(uint256 _id, uint256 _amount) public nonReentrant onlyTokenERC20(_id) {
+    function joinERC20(uint256 _id, uint256 _amount)
+        public
+        nonReentrant
+        onlyTokenERC20(_id)
+    {
         Tournament storage tournament = tournaments[_id];
         require(
             tournament.state == TournamentState.Waiting,
             "tournament not waiting"
         );
-        require(
-            _amount == tournament.tokenFee,
-            "invalid amount"
-        );
+        require(_amount == tournament.tokenFee, "invalid amount");
         require(
             subscription[_id][msg.sender] == 0,
             "player has already joined"
         );
-        
+
         subscription[_id][msg.sender] = _amount;
         tournament.totalAccTokenReward += _amount;
         tournament.token.safeTransferFrom(msg.sender, address(this), _amount);
@@ -318,12 +338,11 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
      * @param _id the id of the tournament to join
      * @param _amount the ERC20 token amount used to transfer to the contract
      */
-    function joinSomeoneElseERC20(uint256 _id, address _player, uint256 _amount)
-        public
-        payable
-        nonReentrant
-        onlyTokenERC20(_id)
-    {
+    function joinSomeoneElseERC20(
+        uint256 _id,
+        address _player,
+        uint256 _amount
+    ) public payable nonReentrant onlyTokenERC20(_id) {
         Tournament storage tournament = tournaments[_id];
         require(
             tournament.state == TournamentState.Waiting,
@@ -346,7 +365,12 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
      * the network token
      * @param _id the id of the tournament to join
      */
-    function addPrize(uint256 _id) public payable nonReentrant onlyNetworkToken(_id) {
+    function addPrize(uint256 _id)
+        public
+        payable
+        nonReentrant
+        onlyNetworkToken(_id)
+    {
         Tournament storage tournament = tournaments[_id];
         require(msg.value > 0, "prize increase must be greater than 0");
         require(
@@ -355,10 +379,9 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
         );
 
         tournament.totalAccTokenReward += msg.value;
-        sponsors[_id].push(Sponsor({
-            walletAddress: msg.sender, 
-            amount: msg.value
-        }));
+        sponsors[_id].push(
+            Sponsor({walletAddress: msg.sender, amount: msg.value})
+        );
         emit prizeIncreased(_id, msg.sender, msg.value, address(0));
     }
 
@@ -368,7 +391,12 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
      * @param _id the id of the tournament to join
      * @param _amount the ERC20 token amount used to transfer to the contract
      */
-    function addPrizeERC20(uint256 _id, uint256 _amount) public payable nonReentrant onlyTokenERC20(_id) {
+    function addPrizeERC20(uint256 _id, uint256 _amount)
+        public
+        payable
+        nonReentrant
+        onlyTokenERC20(_id)
+    {
         Tournament storage tournament = tournaments[_id];
         require(_amount > 0, "prize increase must be greater than 0");
         require(
@@ -378,11 +406,15 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
 
         tournament.token.safeTransferFrom(msg.sender, address(this), _amount);
         tournament.totalAccTokenReward += _amount;
-        sponsors[_id].push(Sponsor({
-            walletAddress: msg.sender,
-            amount: _amount
-        }));
-        emit prizeIncreased(_id, msg.sender, _amount, address(tournament.token));
+        sponsors[_id].push(
+            Sponsor({walletAddress: msg.sender, amount: _amount})
+        );
+        emit prizeIncreased(
+            _id,
+            msg.sender,
+            _amount,
+            address(tournament.token)
+        );
     }
 
     /**
@@ -426,7 +458,7 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
      * if the tournament has not started yet
      * @param _id the id of the tournament to exit
      */
-    function exit(uint256 _id) public nonReentrant {
+    function exit(uint256 _id) public {
         Tournament storage tournament = tournaments[_id];
         require(
             subscription[_id][msg.sender] == tournament.tokenFee,
@@ -436,11 +468,8 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
             tournament.state == TournamentState.Waiting,
             "cannot exit if state is not waiting"
         );
-        uint256 refund = subscription[_id][msg.sender];
-        subscription[_id][msg.sender] = 0;
-        tournament.totalAccTokenReward -= refund;
-        Address.sendValue(payable(msg.sender), refund);
-        emit PlayerExited(_id, msg.sender, refund);
+        _cancelSubscription(_id, payable(msg.sender));
+        emit PlayerExited(_id, msg.sender);
     }
 
     /**
@@ -532,11 +561,11 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
         Address.sendValue(_account, _amount);
         emit PaymentReleased(_account, _amount);
     }
-    
+
     /**
      * @dev helper function to return the array length of players of a particular tournament
      */
-    function getPlayersLength(uint256 _id) external view returns (uint){
+    function getPlayersLength(uint256 _id) external view returns (uint256) {
         return players[_id].length;
     }
 
@@ -545,6 +574,6 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
 
      */
     function version() public pure returns (string memory) {
-        return "1.2.0";
+        return "1.3.0";
     }
 }
