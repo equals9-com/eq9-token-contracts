@@ -222,11 +222,8 @@ describe("Tournament with native token as subscription", async function () {
   it("should not be able to join with erc20 token if a tournament is already using network token", async () => {
     const accounts = await ethers.getSigners();
 
-    await expect(
-      tournamentManager
-        .connect(accounts[19])
-        .joinERC20(id, ethers.utils.parseEther("10"))
-    ).to.be.reverted;
+    await expect(tournamentManager.connect(accounts[19]).joinERC20(id)).to.be
+      .reverted;
   });
 
   it("Some of the joined players should exit", async function () {
@@ -337,7 +334,7 @@ describe("Tournament with native token as subscription", async function () {
   });
 
   it("should be able to check version", async () => {
-    expect(await tournamentManager.version()).to.be.equal("1.3.0");
+    expect(await tournamentManager.version()).to.be.equal("1.4.0");
   });
 
   it("should be able to set waiting state giving its tournament id", async () => {

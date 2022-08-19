@@ -50,9 +50,7 @@ describe("Tournament with a rc20 token as subscription", function () {
         .connect(accounts[i])
         .approve(tournamentManager.address, ethers.utils.parseEther("10"));
 
-      await tournamentManager
-        .connect(accounts[i])
-        .joinERC20(tournamentId, ethers.utils.parseEther("10"));
+      await tournamentManager.connect(accounts[i]).joinERC20(tournamentId);
     }
 
     expect(await tournamentManager.getPlayersLength(tournamentId)).to.be.equal(
@@ -63,21 +61,15 @@ describe("Tournament with a rc20 token as subscription", function () {
   it("should not be able to subscribe a player if the tournament is not in a waiting state", async () => {
     await tournamentManager.setStartedState(tournamentId);
 
-    await expect(
-      tournamentManager
-        .connect(accounts[9])
-        .joinERC20(tournamentId, ethers.utils.parseEther("10"))
-    ).to.be.rejected;
+    await expect(tournamentManager.connect(accounts[9]).joinERC20(tournamentId))
+      .to.be.rejected;
 
     await tournamentManager.setWaitingState(tournamentId);
   });
 
   it("should not be able to subscribe a player the amount is incorrect", async () => {
-    await expect(
-      tournamentManager
-        .connect(accounts[9])
-        .joinERC20(tournamentId, ethers.utils.parseEther("9"))
-    ).to.be.rejected;
+    await expect(tournamentManager.connect(accounts[9]).joinERC20(tournamentId))
+      .to.be.rejected;
   });
 
   it("should not be able to subscribe a player twice in the same tournament", async () => {
@@ -85,15 +77,10 @@ describe("Tournament with a rc20 token as subscription", function () {
       .connect(accounts[9])
       .approve(tournamentManager.address, ethers.utils.parseEther("10"));
 
-    await tournamentManager
-      .connect(accounts[9])
-      .joinERC20(tournamentId, ethers.utils.parseEther("10"));
+    await tournamentManager.connect(accounts[9]).joinERC20(tournamentId);
 
-    await expect(
-      tournamentManager
-        .connect(accounts[9])
-        .joinERC20(tournamentId, ethers.utils.parseEther("10"))
-    ).to.be.rejected;
+    await expect(tournamentManager.connect(accounts[9]).joinERC20(tournamentId))
+      .to.be.rejected;
   });
 
   it("should allow a wallet to add a prize using erc20 token", async function () {

@@ -278,24 +278,20 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
      * It is necessary to pay the native token fee otherwise the player won't be
      * registered as participant of the tournament.
      * @param _id the id of the tournament to join
-     * @param _amount the ERC20 token amount used to transfer to the contract
      */
-    function joinERC20(uint256 _id, uint256 _amount)
-        public
-        nonReentrant
-        onlyTokenERC20(_id)
-    {
+
+    function joinERC20(uint256 _id) public nonReentrant onlyTokenERC20(_id) {
         Tournament storage tournament = tournaments[_id];
         require(
             tournament.state == TournamentState.Waiting,
             "tournament not waiting"
         );
-        require(_amount == tournament.tokenFee, "invalid amount");
         require(
             subscription[_id][msg.sender] == 0,
             "player has already joined"
         );
 
+        uint256 _amount = tournament.tokenFee;
         subscription[_id][msg.sender] = _amount;
         tournament.totalAccTokenReward += _amount;
         tournament.token.safeTransferFrom(msg.sender, address(this), _amount);
@@ -574,6 +570,6 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
 
      */
     function version() public pure returns (string memory) {
-        return "1.3.0";
+        return "1.4.0";
     }
 }
