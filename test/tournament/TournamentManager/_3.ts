@@ -8,7 +8,7 @@ chai.use(chaiAsPromised);
 
 const { expect } = chai;
 
-describe("Tournament with a rc20 token as subscription", function () {
+describe("Tournament with a ERC20 token as subscription", function () {
   let tournamentManager: TournamentManager;
   let eq9: EQ9;
   let tournamentId: string;
