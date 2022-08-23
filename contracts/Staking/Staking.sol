@@ -28,11 +28,11 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
     mapping(address => EnumerableSet.AddressSet) private stakerAddresses;
     mapping(address => mapping(address => uint256)) public stakerTimestamps;
     mapping(address => mapping(address => uint256)) public stakerAmounts;
-    mapping(address => uint256) public claimAmount; 
-    mapping(address => uint256) public lastTimeUserUnstake; 
+    mapping(address => uint256) public claimAmount;
+    mapping(address => uint256) public lastTimeUserUnstake;
 
-    event Staked(uint256 amount, address staker, address player);
-    event Unstaked(uint256 amount, address staker, address player);
+    event Staked(uint256 amount, address player, address staker);
+    event Unstaked(uint256 amount, address player, address staker);
 
     constructor(address _eq9Contract) {
         name = "Staking Contract";
@@ -54,7 +54,7 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
         stakerAmounts[_player][msg.sender] += _amount;
 
         eq9Contract.safeTransferFrom(msg.sender, address(this), _amount);
-        emit Staked(_amount, msg.sender, _player);
+        emit Staked(_amount, _player, msg.sender);
     }
 
     /**
@@ -78,14 +78,13 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
 
         if (stakerAmounts[_player][msg.sender] == _amount) {
             stakerAddresses[_player].remove(msg.sender);
-            stakerAmounts[_player][msg.sender] = 0;
             stakerTimestamps[_player][msg.sender] = 0;
         }
 
         lastTimeUserUnstake[msg.sender] = block.timestamp;
         stakerAmounts[_player][msg.sender] -= _amount;
         claimAmount[msg.sender] += _amount;
-        emit Unstaked(_amount, msg.sender, _player);
+        emit Unstaked(_amount, _player, msg.sender);
     }
 
     /**
@@ -95,14 +94,15 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
      * once in 24 hours unless he peform another unstake elsewhere
      * @notice the user will always claim the total value of claimAmount
      */
-    function claimUnstake() external {
-        require(block.timestamp >= lastTimeUserUnstake[msg.sender] + 24 hours, "Unable to claim, 24 hours still have not have passed");
+    function claim() external {
+        require(
+            block.timestamp >= lastTimeUserUnstake[msg.sender] + 24 hours,
+            "Unable to claim, 24 hours still have not have passed"
+        );
 
-        
         eq9Contract.transfer(msg.sender, claimAmount[msg.sender]);
         claimAmount[msg.sender] = 0;
     }
-
 
     // function fetchStakersAmount(address _player)
     //     external
@@ -119,10 +119,9 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
     //     view
     //     returns (address[]  memory _stakerAddresses,
     //         uint256[]  memory _stakerAmounts,
-    //         uint256[] memory stakerTimestamps        
+    //         uint256[] memory stakerTimestamps
     //     )
     // {
     //     _stakerAddresses = stakerAddresses[_player].values();
     // }
-
 }
