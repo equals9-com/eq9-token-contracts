@@ -81,4 +81,28 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
         eq9Contract.transfer(msg.sender, _amount);
         emit Unstaked(_amount, msg.sender, _player);
     }
+
+
+    function fetchStakersAmount(address _player)
+        external
+        view
+        returns (
+            uint256 _stakersAmount
+        )
+    {
+        _stakersAmount = stakerAddresses[_player].length();
+    }
+
+    function fetchPlayerStakers(address _player)
+        external
+        view
+        returns (address[]  memory _stakerAddresses,
+            uint256[]  memory _stakerAmounts,
+            uint256[] memory stakerTimestamps        
+        )
+    {
+        _stakerAddresses = stakerAddresses[_player].values();
+        _stakerTimestamps
+    }
+
 }
