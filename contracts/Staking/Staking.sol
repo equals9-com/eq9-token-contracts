@@ -28,6 +28,8 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
     mapping(address => EnumerableSet.AddressSet) private stakerAddresses;
     mapping(address => mapping(address => uint256)) public stakerTimestamps;
     mapping(address => mapping(address => uint256)) public stakerAmounts;
+    mapping(address => uint256) public claimAmount; 
+    mapping(address => uint256) public lastTimeUserUnstake; 
 
     event Staked(uint256 amount, address staker, address player);
     event Unstaked(uint256 amount, address staker, address player);
@@ -67,42 +69,60 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
     function unstake(uint256 _amount, address _player) public {
         require(
             stakerAddresses[_player].contains(msg.sender),
-            "not staking into player address"
+            "You are not staking into this player address"
+        );
+        require(
+            _amount <= stakerAmounts[_player][msg.sender],
+            "Not enough staked amount into the player"
         );
 
-        uint256 finalAmount = stakerAmounts[_player][msg.sender] - _amount;
-        if (finalAmount == 0) {
+        if (stakerAmounts[_player][msg.sender] == _amount) {
             stakerAddresses[_player].remove(msg.sender);
             stakerAmounts[_player][msg.sender] = 0;
             stakerTimestamps[_player][msg.sender] = 0;
         }
 
+        lastTimeUserUnstake[msg.sender] = block.timestamp;
         stakerAmounts[_player][msg.sender] -= _amount;
-        eq9Contract.transfer(msg.sender, _amount);
+        claimAmount[msg.sender] += _amount;
         emit Unstaked(_amount, msg.sender, _player);
     }
 
+    /**
+     * @dev function used to the user claim the unstake
+     * performed at unstake function, here is where the user
+     * in fact will get the unstaked tokens with a limit of
+     * once in 24 hours unless he peform another unstake elsewhere
+     * @notice the user will always claim the total value of claimAmount
+     */
+    function claimUnstake() external {
+        require(block.timestamp >= lastTimeUserUnstake[msg.sender] + 24 hours, "Unable to claim, 24 hours still have not have passed");
 
-    function fetchStakersAmount(address _player)
-        external
-        view
-        returns (
-            uint256 _stakersAmount
-        )
-    {
-        _stakersAmount = stakerAddresses[_player].length();
+        
+        eq9Contract.transfer(msg.sender, claimAmount[msg.sender]);
+        claimAmount[msg.sender] = 0;
     }
 
-    function fetchPlayerStakers(address _player)
-        external
-        view
-        returns (address[]  memory _stakerAddresses,
-            uint256[]  memory _stakerAmounts,
-            uint256[] memory stakerTimestamps        
-        )
-    {
-        _stakerAddresses = stakerAddresses[_player].values();
-        _stakerTimestamps
-    }
+
+    // function fetchStakersAmount(address _player)
+    //     external
+    //     view
+    //     returns (
+    //         uint256 _stakersAmount
+    //     )
+    // {
+    //     _stakersAmount = stakerAddresses[_player].length();
+    // }
+
+    // function fetchPlayerStakers(address _player)
+    //     external
+    //     view
+    //     returns (address[]  memory _stakerAddresses,
+    //         uint256[]  memory _stakerAmounts,
+    //         uint256[] memory stakerTimestamps        
+    //     )
+    // {
+    //     _stakerAddresses = stakerAddresses[_player].values();
+    // }
 
 }

@@ -2,14 +2,15 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import chai from "chai";
 import chaiAsPromised from "chai-as-promised";
 import { ethers } from "hardhat";
-import { EQ9 } from "../../types";
+import { EQ9, Staking } from "../../types";
 
 chai.use(chaiAsPromised);
 
 const { expect } = chai;
 
-describe("Tournament with a ERC20 token as subscription", function () {
+describe("Staking with a ERC20 token (EQ9)", function () {
   let eq9: EQ9;
+  let stakingContract: Staking;
   let accounts: SignerWithAddress[];
 
   it("should deploy the ERC20 token", async function () {
@@ -28,9 +29,65 @@ describe("Tournament with a ERC20 token as subscription", function () {
     }
   });
 
-  it("should allow wallets to stake", async () => {});
+  it("should be able to deploy staking contract", async () => {
+    const Staking = await ethers.getContractFactory("Staking");
 
-  it("should allow wallets to unstake", async () => {});
+    stakingContract = await Staking.deploy(eq9.address);
+
+    await stakingContract.deployed();
+  });
+
+  it("should be able to approve eq9 to staking contract for all accounts", async () => {
+    for (let index = 1; index < accounts.length; index++) {
+      await eq9
+        .connect(accounts[index])
+        .approve(stakingContract.address, ethers.utils.parseEther("100"));
+    }
+  });
+
+  it("should allow wallets to stake", async () => {
+    await stakingContract
+      .connect(accounts[1])
+      .stake(ethers.utils.parseEther("1"), accounts[2].address);
+    await stakingContract
+      .connect(accounts[1])
+      .stake(ethers.utils.parseEther("2"), accounts[3].address);
+    await stakingContract
+      .connect(accounts[2])
+      .stake(ethers.utils.parseEther("3"), accounts[3].address);
+
+    const amount = await stakingContract.stakerAmounts(
+      accounts[2].address,
+      accounts[1].address
+    );
+
+    const amount2 = await stakingContract.stakerAmounts(
+      accounts[3].address,
+      accounts[1].address
+    );
+
+    const amount3 = await stakingContract.stakerAmounts(
+      accounts[3].address,
+      accounts[2].address
+    );
+
+    expect(amount).to.be.equal(ethers.utils.parseEther("1"));
+    expect(amount2).to.be.equal(ethers.utils.parseEther("2"));
+    expect(amount3).to.be.equal(ethers.utils.parseEther("3"));
+  });
+
+  it("should allow wallets to unstake", async () => {
+    await stakingContract
+      .connect(accounts[1])
+      .unstake(ethers.utils.parseEther("1"), accounts[2].address);
+
+    const amount = await stakingContract.stakerAmounts(
+      accounts[2].address,
+      accounts[1].address
+    );
+
+    expect(amount).to.be.equal(ethers.utils.parseEther("0"));
+  });
 
   it("should allow wallets to claim", async () => {});
 
