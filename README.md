@@ -11,13 +11,22 @@ on the harmony mainnet network.
 
 You can check it on the explorer: https://explorer.harmony.one/address/0x598228643d6faa1b5569c3d996cb8cf8ca1fdb92
 
-Since we are changing the token, here are the timelocks and the token, deployed on mumbai testnet:
 
-https://mumbai.polygonscan.com/token/0x2Fdc13eb83D95952d487306b9e252602085E3426#balances
+## On Polygon mainnet after the network change
 
-It's possible to see that each contract addresses respects the amount to be released by the timelocks.
+https://polygonscan.com/token/0x3963a400b42377376d6c3d92ddf2d6288d8ee0d6#balances
 
-https://mumbai.polygonscan.com/token/tokenholderchart/0x2Fdc13eb83D95952d487306b9e252602085E3426
+It is possible the check the timelock contracts in the token holders chart:
+https://polygonscan.com/token/tokenholderchart/0x3963a400b42377376d6c3d92ddf2d6288d8ee0d6
+
+## On polygon mumbai testnet
+
+We have a testnet token without timelocks for testing on polygon:
+
+https://mumbai.polygonscan.com/token/tokenholderchart/0x7B4736f9C88c0A59310BfFD3F5d7462812aeC43B
+
+We have the staking contract deployed on mumbai: 0x11B8AbF80246E103786f7390bAf1688CAC5b466b
+
 
 
 ## testing 
