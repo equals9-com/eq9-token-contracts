@@ -1,6 +1,6 @@
 import chai from "chai";
 import chaiAsPromised from "chai-as-promised";
-import { ethers, waffle } from "hardhat";
+import { ethers } from "hardhat";
 import { TournamentManager } from "../../../types";
 const { BigNumber } = ethers;
 
@@ -10,7 +10,6 @@ const { expect } = chai;
 
 describe("Tournament with a prize added and free subscription ", async function () {
   let tournamentManager: TournamentManager;
-  const provider = waffle.provider;
   let id: string;
 
   it("should deploy the tournamentManager", async function () {
@@ -50,7 +49,9 @@ describe("Tournament with a prize added and free subscription ", async function 
         .connect(accounts[i])
         .join(id, { value: ethers.utils.parseEther("0") });
     }
-    const balance = await provider.getBalance(tournamentManager.address);
+    const balance = await tournamentManager.provider.getBalance(
+      tournamentManager.address
+    );
     expect(balance.toString()).to.be.equal(
       ethers.utils.parseEther("1000").toString()
     );
@@ -80,7 +81,9 @@ describe("Tournament with a prize added and free subscription ", async function 
       );
     }
 
-    const balance = await provider.getBalance(tournamentManager.address);
+    const balance = await tournamentManager.provider.getBalance(
+      tournamentManager.address
+    );
 
     // 960 because 4 players received 10 each and the accumulated prize was 1000
     expect(balance.toString()).to.be.equal(
@@ -135,7 +138,9 @@ describe("Tournament with a prize added and free subscription ", async function 
       );
     }
 
-    const balance = await provider.getBalance(tournamentManager.address);
+    const balance = await tournamentManager.provider.getBalance(
+      tournamentManager.address
+    );
 
     expect(balance.toString()).to.be.equal(
       ethers.utils.parseEther("910").toString()

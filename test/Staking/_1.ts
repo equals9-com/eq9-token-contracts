@@ -3,10 +3,7 @@ import chai from "chai";
 import chaiAsPromised from "chai-as-promised";
 import { ethers } from "hardhat";
 import { EQ9, Staking } from "../../types";
-
-const getUnixTime = (date: Date): number => {
-  return Math.floor(date.getTime() / 1000);
-};
+import { time } from "@nomicfoundation/hardhat-network-helpers";
 
 chai.use(chaiAsPromised);
 
@@ -107,11 +104,10 @@ describe("Staking with a ERC20 token (EQ9)", function () {
     await expect(stakingContract.connect(accounts[2]).claim()).to.be.rejected;
   });
 
-  // NOTE: after this test the mined blocks are mined after 1 day
   it("should allow wallets to claim", async () => {
-    // pega o dia atual e adiciona 1 dia
-
-    await ethers.provider.send("evm_increaseTime", [24 * 60 * 60 + 1]);
+    const DAY_IN_SECONDS = 24 * 60 * 60;
+    const waitTime = (await time.latest()) + DAY_IN_SECONDS;
+    await time.increaseTo(waitTime);
 
     await stakingContract.connect(accounts[1]).claim();
 

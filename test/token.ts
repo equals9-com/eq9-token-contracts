@@ -12,8 +12,8 @@ describe("EQ9", function () {
     // We get the contract to deploy
     const EQ9 = await ethers.getContractFactory("EQ9");
     eq9 = await EQ9.deploy();
-    const totalToken = await eq9.balanceOf(owner.address);
-    console.log(totalToken.toString());
+    await eq9.balanceOf(owner.address);
+
     await eq9.deployed();
   });
 
@@ -25,44 +25,36 @@ describe("EQ9", function () {
   });
 
   it("should decrease the total supply on stake", async () => {
-    const totalSupplyBefore = (await eq9.totalSupply()).toString();
-    console.log("supply before", totalSupplyBefore);
+    (await eq9.totalSupply()).toString();
 
     await eq9.stake("1700000000" + decimals);
-    const totalSupplyAfter = (await eq9.totalSupply()).toString();
-    console.log("supply after", totalSupplyAfter);
+    (await eq9.totalSupply()).toString();
   });
 
   it("should increase the total supply on unstake", async () => {
-    const totalSupplyBefore = (await eq9.totalSupply()).toString();
-    console.log("supply before", totalSupplyBefore);
+    (await eq9.totalSupply()).toString();
 
     await eq9.unstake("1700000000" + decimals);
-    const totalSupplyAfter = (await eq9.totalSupply()).toString();
-    console.log("supply after", totalSupplyAfter);
+    (await eq9.totalSupply()).toString();
   });
 
   it("should not increase the staking amount if staker already has stake (only new stakers should be counted)", async () => {
-    const totalSupplyBefore = (await eq9.totalSupply()).toString();
-    console.log("supply before", totalSupplyBefore);
+    (await eq9.totalSupply()).toString();
 
     await eq9.stake("1000");
 
     await eq9.stake("100000");
-    const amountStakes = (await eq9.amountStakes()).toString();
-    console.log("amount of stakers after", amountStakes);
+    (await eq9.amountStakes()).toString();
   });
 
   it("should set to 0 the stakes", async () => {
     const [owner] = await ethers.getSigners();
     const stake = await eq9.stakers(owner.address);
     const stringStake = stake.toString();
-    console.log(stringStake);
+
     await eq9.unstake(stringStake);
 
-    console.log("amount stakes should be 0");
-    const amountStakes = (await eq9.amountStakes()).toString();
-    console.log(amountStakes);
+    (await eq9.amountStakes()).toString();
   });
 
   it("should set 2 to the the stakes", async () => {
@@ -70,20 +62,17 @@ describe("EQ9", function () {
     await eq9.connect(owner).stake("10");
     await eq9.connect(other).stake("10");
 
-    console.log("amount stakes should be 2");
-    const amountStakes = (await eq9.amountStakes()).toString();
-    console.log(amountStakes);
+    (await eq9.amountStakes()).toString();
   });
 
   it("should not allow to unstake more than the staked value", async () => {
     const [, other] = await ethers.getSigners();
 
-    await expect(eq9.connect(other).unstake("11")).to.be.revertedWith("");
+    await expect(eq9.connect(other).unstake("11")).to.be.rejected;
   });
 
   it("should be able to use public and external functions from ERC20 interface ", async () => {
     const instance = await ethers.getContractAt("IEQ9", eq9.address);
-    const totalSupply = await instance.totalSupply();
-    console.log("total supply", totalSupply.toString());
+    await instance.totalSupply();
   });
 });

@@ -2,6 +2,7 @@ import { ethers } from "hardhat";
 import { EQ9, TokenMultiTimelock } from "../types";
 import { expect } from "chai";
 import { timelockConfigs } from "../config/timelockConfig";
+import { mine } from "@nomicfoundation/hardhat-network-helpers";
 
 const getUnixTime = (date: Date): number => {
   return Math.floor(date.getTime() / 1000);
@@ -68,7 +69,6 @@ describe("timelocks", function () {
         ethers.utils.parseUnits(String(monthlyRelease), "ether")
       );
 
-      console.log(releaseAmounts);
       const timelock = await TokenTimeLock.deploy(
         eq9.address,
         String(beneficiaryAddress),
@@ -99,10 +99,6 @@ describe("timelocks", function () {
   it("should have the proper non locked value in wallet after all locks", async () => {
     const [owner] = await ethers.getSigners();
     const circulatingSupply = eq9.balanceOf(owner.address);
-    console.log(
-      "left circulating supply",
-      (await circulatingSupply).toString()
-    );
 
     // TODO; requires validation with financial
     expect((await circulatingSupply).toString()).to.be.equal(
@@ -112,33 +108,23 @@ describe("timelocks", function () {
 
   it("should release tokens at each date", async () => {
     // mine a date that is past all schedules
-    await ethers.provider.send("evm_mine", [
-      getUnixTime(new Date("01/01/2026")),
-    ]);
+    await mine(getUnixTime(new Date("01/01/2026")));
 
     for (let i = 0; i < timelocks.length; i++) {
-      const name = await timelocks[i].name();
+      await timelocks[i].name();
 
-      console.log(`releasing: ${name.toString()} `);
-
-      const startingBalance = await eq9.balanceOf(timelocks[i].address);
-
-      console.log("locked in contract:", startingBalance.toString());
+      await eq9.balanceOf(timelocks[i].address);
 
       // each of the timelocks has it's own schedule. The order of the
       // timelocks array represent the same order of the configs.
       // so, the amount of release() function calls should be the
       // same as the dates length.
       for (let j = 0; j < timelockConfigs[i][0].length; j++) {
-        const releaseAmount = await timelocks[i].releaseAmounts(j);
-        console.log("amount to release in wei ", releaseAmount.toString());
+        await timelocks[i].releaseAmounts(j);
+
         const tx = await timelocks[i].release();
         const receipt: any = await tx.wait();
-        const releaseIndex = ethers.BigNumber.from(
-          receipt.events[1].args.releaseIndex
-        ).toString();
-
-        console.log("release of index: ", releaseIndex);
+        ethers.BigNumber.from(receipt.events[1].args.releaseIndex).toString();
       }
       const remainingBalance = await eq9.balanceOf(timelocks[i].address);
       expect(remainingBalance.toString()).to.be.equal("0");

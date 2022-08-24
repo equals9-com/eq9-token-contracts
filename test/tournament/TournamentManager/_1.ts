@@ -1,6 +1,6 @@
 import chai from "chai";
 import chaiAsPromised from "chai-as-promised";
-import { ethers, waffle } from "hardhat";
+import { ethers } from "hardhat";
 import { TournamentManager } from "../../../types";
 const { BigNumber } = ethers;
 
@@ -10,7 +10,6 @@ const { expect } = chai;
 
 describe("Tournament with native token as subscription", async function () {
   let tournamentManager: TournamentManager;
-  const provider = waffle.provider;
   let id: string;
 
   it("should deploy the tournamentManager", async function () {
@@ -44,7 +43,9 @@ describe("Tournament with native token as subscription", async function () {
         .connect(accounts[i])
         .join(id, { value: ethers.utils.parseEther("10") });
     }
-    const balance = await provider.getBalance(tournamentManager.address);
+    const balance = await tournamentManager.provider.getBalance(
+      tournamentManager.address
+    );
     expect(balance.toString()).to.be.equal(
       ethers.utils.parseEther("90").toString()
     );
@@ -53,8 +54,7 @@ describe("Tournament with native token as subscription", async function () {
   it("should be able to verify if address joined", async function () {
     const accounts = await ethers.getSigners();
 
-    const res = await tournamentManager.subscription(id, accounts[2].address);
-    console.log(res.toString());
+    await tournamentManager.subscription(id, accounts[2].address);
   });
 
   it("Address with wrong payment shouldn't be able to join", async function () {
@@ -69,15 +69,16 @@ describe("Tournament with native token as subscription", async function () {
   it("should allow a joined address to exit and receive it's funds back", async function () {
     const accounts = await ethers.getSigners();
     await tournamentManager.connect(accounts[1]).exit(id);
-    const balance = await provider.getBalance(tournamentManager.address);
+    const balance = await tournamentManager.provider.getBalance(
+      tournamentManager.address
+    );
     expect(balance.toString()).to.be.equal(
       ethers.utils.parseEther("80").toString()
     );
   });
 
   it("should fetch the current state", async function () {
-    const currentState = (await tournamentManager.tournaments(id)).state;
-    console.log(currentState.toString());
+    (await tournamentManager.tournaments(id)).state;
   });
 
   it("should allow only the admin to set the state as Started", async function () {
@@ -147,7 +148,9 @@ describe("Tournament with native token as subscription", async function () {
       );
     }
 
-    const balance = await provider.getBalance(tournamentManager.address);
+    const balance = await tournamentManager.provider.getBalance(
+      tournamentManager.address
+    );
 
     // 40 because 1 player joined and it distributed funds to the 4 others
     expect(balance.toString()).to.be.equal(
@@ -177,7 +180,9 @@ describe("Tournament with native token as subscription", async function () {
         .connect(accounts[i])
         .join(id, { value: ethers.utils.parseEther("10") });
     }
-    const balance = await provider.getBalance(tournamentManager.address);
+    const balance = await tournamentManager.provider.getBalance(
+      tournamentManager.address
+    );
 
     // 130 because 9 more players joined and it was only splitted 40 ether out of the 80 available
     expect(balance.toString()).to.be.equal(
@@ -231,7 +236,9 @@ describe("Tournament with native token as subscription", async function () {
 
     await tournamentManager.connect(accounts[1]).exit(id);
 
-    const balance = await provider.getBalance(tournamentManager.address);
+    const balance = await tournamentManager.provider.getBalance(
+      tournamentManager.address
+    );
     expect(balance.toString()).to.be.equal(
       ethers.utils.parseEther("130").toString()
     );
