@@ -77,6 +77,21 @@ describe("Staking with a ERC20 token (EQ9)", function () {
     expect(amount3).to.be.equal(ethers.utils.parseEther("3"));
   });
 
+  it("should be able to stake twice in same player", async () => {
+    // NOTE: considering the previous test we just have to stake again once in
+    // the same player
+    await stakingContract
+      .connect(accounts[1])
+      .stake(ethers.utils.parseEther("1"), accounts[2].address);
+
+    const amount = await stakingContract.stakerAmounts(
+      accounts[2].address,
+      accounts[1].address
+    );
+
+    expect(amount).to.be.equal(ethers.utils.parseEther("2"));
+  });
+
   it("should allow wallets to unstake", async () => {
     await stakingContract
       .connect(accounts[1])
@@ -96,8 +111,37 @@ describe("Staking with a ERC20 token (EQ9)", function () {
       accounts[2].address
     );
 
-    expect(amount).to.be.equal(ethers.utils.parseEther("0"));
+    expect(amount).to.be.equal(ethers.utils.parseEther("1"));
     expect(amount2).to.be.equal(ethers.utils.parseEther("2"));
+  });
+
+  it("should not allow to unstake from a player that you don't have any stake", async () => {
+    await expect(
+      stakingContract
+        .connect(accounts[1])
+        .unstake(ethers.utils.parseEther("1"), accounts[5].address)
+    ).to.be.revertedWith("You are not staking into this player address");
+  });
+
+  it("should not be able to unstake with a amount exceding the staked amount", async () => {
+    await expect(
+      stakingContract
+        .connect(accounts[1])
+        .unstake(ethers.utils.parseEther("100"), accounts[2].address)
+    ).to.be.rejectedWith("Not enough staked amount into the player");
+  });
+
+  it("should be able to unstake all the tokens staked on a player", async () => {
+    await stakingContract
+      .connect(accounts[1])
+      .unstake(ethers.utils.parseEther("1"), accounts[2].address);
+
+    const stakeTimeStamp = await stakingContract.stakerTimestamps(
+      accounts[2].address,
+      accounts[1].address
+    );
+
+    expect(stakeTimeStamp.toNumber()).to.be.equal(0);
   });
 
   it("should not allow wallets to claim if 24 hours haven't passed yet", async () => {

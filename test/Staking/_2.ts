@@ -4,10 +4,6 @@ import chaiAsPromised from "chai-as-promised";
 import { ethers } from "hardhat";
 import { EQ9, Staking } from "../../types";
 
-const getUnixTime = (date: Date): number => {
-  return Math.floor(date.getTime() / 1000);
-};
-
 chai.use(chaiAsPromised);
 
 const { expect } = chai;
@@ -69,14 +65,15 @@ describe("Staking contract test for reading contract information", function () {
       accounts[2].address
     );
 
-    console.log(length.toString());
-
     const stakes = await stakingContract.fetchPlayerStakes(
       accounts[2].address,
       "0",
       length
     );
 
-    console.log(stakes);
+    // NOTE: the values of this array changes everytime, so its very difficult to
+    // precisely expect all the values
+    expect(stakes).to.exist;
+    expect(length.toNumber()).to.be.equal(19);
   });
 });
