@@ -9,6 +9,8 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
+import "hardhat/console.sol";
+
 /**
  * @title Staking
  * @notice This contract allows to stake EQ9 into players of equalssport.
@@ -23,11 +25,14 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
     string public name;
     IERC20 eq9Contract;
 
-    // Declare a set state variable
-
+    // A player address will have many stakers
     mapping(address => EnumerableSet.AddressSet) private stakerAddresses;
+
+    // these mappings are always of the form [stakerAddres][playerAddress]
     mapping(address => mapping(address => uint256)) public stakerTimestamps;
     mapping(address => mapping(address => uint256)) public stakerAmounts;
+
+    //
     mapping(address => uint256) public claimAmount;
     mapping(address => uint256) public lastTimeUserUnstake;
 
@@ -104,24 +109,46 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
         claimAmount[msg.sender] = 0;
     }
 
-    // function fetchStakersAmount(address _player)
-    //     external
-    //     view
-    //     returns (
-    //         uint256 _stakersAmount
-    //     )
-    // {
-    //     _stakersAmount = stakerAddresses[_player].length();
-    // }
+    function fetchStakersAmount(address _player)
+        external
+        view
+        returns (uint256 _stakersAmount)
+    {
+        _stakersAmount = stakerAddresses[_player].length();
+    }
 
-    // function fetchPlayerStakers(address _player)
-    //     external
-    //     view
-    //     returns (address[]  memory _stakerAddresses,
-    //         uint256[]  memory _stakerAmounts,
-    //         uint256[] memory stakerTimestamps
-    //     )
-    // {
-    //     _stakerAddresses = stakerAddresses[_player].values();
-    // }
+    /**
+     * @dev function used to the user claim the unstake
+     * performed at unstake function, here is where the user
+     * in fact will get the unstaked tokens with a limit of
+     * once in 24 hours unless he peform another unstake elsewhere
+     * @notice the user will always claim the total value of claimAmount
+     */
+
+    function fetchPlayerStakes(
+        address _player,
+        uint256 start,
+        uint256 limit
+    )
+        external
+        view
+        returns (
+            address[] memory stakers_,
+            uint256[] memory amounts_,
+            uint256[] memory timestamps_
+        )
+    {
+        address[] memory stakers_ = new address[](limit);
+        uint256[] memory amounts_ = new uint256[](limit);
+        uint256[] memory timestamps_ = new uint256[](limit);
+
+        for (uint256 i = start; i < limit; i++) {
+            address staker = stakerAddresses[_player].at(i);
+            stakers_[i] = staker;
+            amounts_[i] = stakerAmounts[_player][staker];
+            timestamps_[i] = stakerTimestamps[_player][staker];
+        }
+
+        return (stakers_, amounts_, timestamps_);
+    }
 }
