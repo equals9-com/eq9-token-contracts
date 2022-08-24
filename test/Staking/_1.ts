@@ -110,10 +110,8 @@ describe("Staking with a ERC20 token (EQ9)", function () {
   // NOTE: after this test the mined blocks are mined after 1 day
   it("should allow wallets to claim", async () => {
     // pega o dia atual e adiciona 1 dia
-    const date = new Date();
-    date.setDate(date.getDay() + 1);
-    // mine a date that is past all schedules
-    await ethers.provider.send("evm_mine", [getUnixTime(date)]);
+
+    await ethers.provider.send("evm_increaseTime", [24 * 60 * 60 + 1]);
 
     await stakingContract.connect(accounts[1]).claim();
 
