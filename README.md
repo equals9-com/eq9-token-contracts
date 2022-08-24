@@ -28,8 +28,7 @@ https://mumbai.polygonscan.com/token/tokenholderchart/0x7B4736f9C88c0A59310BfFD3
 We have the staking contract deployed on mumbai: 0x11B8AbF80246E103786f7390bAf1688CAC5b466b
 
 
-
-## testing 
+## testing
 
 The test file included only tests the custom stake functionality. All other functionalities are standard OpenZeppelin ERC20. 
 
