@@ -118,17 +118,16 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
     }
 
     /**
-     * @dev function used to the user claim the unstake
-     * performed at unstake function, here is where the user
-     * in fact will get the unstaked tokens with a limit of
-     * once in 24 hours unless he peform another unstake elsewhere
-     * @notice the user will always claim the total value of claimAmount
+     * @dev function used to fetch all stakes into a player
+     * @param _player address of the player receiving stakes
+     * @param _start index to start the array.
+     * @param _limit index to end search
      */
 
     function fetchPlayerStakes(
         address _player,
-        uint256 start,
-        uint256 limit
+        uint256 _start,
+        uint256 _limit
     )
         external
         view
@@ -138,11 +137,11 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
             uint256[] memory timestamps_
         )
     {
-        address[] memory stakers_ = new address[](limit);
-        uint256[] memory amounts_ = new uint256[](limit);
-        uint256[] memory timestamps_ = new uint256[](limit);
+        address[] memory stakers_ = new address[](_limit);
+        uint256[] memory amounts_ = new uint256[](_limit);
+        uint256[] memory timestamps_ = new uint256[](_limit);
 
-        for (uint256 i = start; i < limit; i++) {
+        for (uint256 i = _start; i < _limit; i++) {
             address staker = stakerAddresses[_player].at(i);
             stakers_[i] = staker;
             amounts_[i] = stakerAmounts[_player][staker];
