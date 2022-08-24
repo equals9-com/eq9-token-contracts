@@ -4,6 +4,10 @@ import chaiAsPromised from "chai-as-promised";
 import { ethers } from "hardhat";
 import { EQ9, Staking } from "../../types";
 
+const getUnixTime = (date: Date): number => {
+  return Math.floor(date.getTime() / 1000);
+};
+
 chai.use(chaiAsPromised);
 
 const { expect } = chai;
@@ -86,10 +90,35 @@ describe("Staking with a ERC20 token (EQ9)", function () {
       accounts[1].address
     );
 
+    await stakingContract
+      .connect(accounts[2])
+      .unstake(ethers.utils.parseEther("1"), accounts[3].address);
+
+    const amount2 = await stakingContract.stakerAmounts(
+      accounts[3].address,
+      accounts[2].address
+    );
+
     expect(amount).to.be.equal(ethers.utils.parseEther("0"));
+    expect(amount2).to.be.equal(ethers.utils.parseEther("2"));
   });
 
-  it("should allow wallets to claim", async () => {});
+  it("should not allow wallets to claim if 24 hours haven't passed yet", async () => {
+    await expect(stakingContract.connect(accounts[2]).claim()).to.be.rejected;
+  });
 
-  it("should not allow wallets to claim if 24 hours haven't passed yer", async () => {});
+  // NOTE: after this test the mined blocks are mined after 1 day
+  it("should allow wallets to claim", async () => {
+    // pega o dia atual e adiciona 1 dia
+    const date = new Date();
+    date.setDate(date.getDay() + 1);
+    // mine a date that is past all schedules
+    await ethers.provider.send("evm_mine", [getUnixTime(date)]);
+
+    await stakingContract.connect(accounts[1]).claim();
+
+    const balance = await eq9.balanceOf(accounts[1].address);
+
+    expect(balance).to.be.equal(ethers.utils.parseEther("98"));
+  });
 });
