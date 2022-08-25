@@ -1,8 +1,14 @@
 {
-  "name": "hardhat-project",
+  "name": "eq9-token-contracts",
   "scripts": {
     "prettier": "prettier --write 'contracts/**/*.sol'",
-    "lint": "solhint --fix contracts/**/*.sol"
+    "lint": "solhint --fix contracts/**/*.sol",
+    "prettier:solidity": "./node_modules/.bin/prettier --write contracts/**/*.sol"
+  },
+  "husky": {
+    "hooks": {
+       "pre-push": "yarn prettier"
+    }
   },
   "engines": {
     "node": ">=16.0.0"
@@ -37,9 +43,11 @@
     "ethers": "^5.7.0",
     "hardhat": "^2.10.2",
     "hardhat-gas-reporter": "^1.0.8",
-    "prettier": "^2.4.1",
-    "prettier-plugin-solidity": "^1.0.0-beta.19",
+    "husky": "^8.0.1",
+    "prettier": "^2.7.1",
+    "prettier-plugin-solidity": "^1.0.0-beta.24",
     "solhint": "^3.3.6",
+    "solhint-plugin-prettier": "^0.0.5",
     "solidity-coverage": "^0.7.21",
     "ts-node": "^10.4.0",
     "typechain": "^8.1.0",
@@ -47,8 +55,6 @@
     "yarn": "^1.22.19"
   },
   "dependencies": {
-    "@harmony-js/crypto": "^0.1.56",
-    "chai-as-promised": "^7.1.1",
-    "web3": "^1.6.1"
+    "chai-as-promised": "^7.1.1"
   }
 }

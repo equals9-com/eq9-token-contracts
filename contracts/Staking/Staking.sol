@@ -15,7 +15,6 @@ import "hardhat/console.sol";
  * @title Staking
  * @notice This contract allows to stake EQ9 into players of equalssport.
  * Staking rewards are calculated off-chain, but baased on this contract.
- *yarn
  */
 
 contract Staking is Ownable, ReentrancyGuard, Pausable {
@@ -56,8 +55,8 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
             stakerAddresses[_player].add(msg.sender);
             stakerTimestamps[_player][msg.sender] = block.timestamp;
         }
-        stakerAmounts[_player][msg.sender] += _amount;
 
+        stakerAmounts[_player][msg.sender] += _amount;
         eq9Contract.safeTransferFrom(msg.sender, address(this), _amount);
         emit Staked(_amount, _player, msg.sender);
     }
@@ -149,5 +148,13 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
         }
 
         return (stakers_, amounts_, timestamps_);
+    }
+    /**
+     * @dev this function will be used by the onwer to revert all stakes and
+     * claims of this contract, in another words all the tokens will be returned
+     * to every staker.
+     */
+    function revertAll() external onlyOwner {
+
     }
 }
