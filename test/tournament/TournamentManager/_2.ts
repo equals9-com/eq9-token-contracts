@@ -29,7 +29,7 @@ describe("Tournament with a prize added and free subscription ", async function 
     );
     const rc = await tx.wait(); // 0ms, as tx is already confirmed
     const event = rc.events?.find(
-      (event) => event.event === "TournamentCreated"
+      (event: any) => event.event === "TournamentCreated"
     );
     const args = event?.args;
     id = BigNumber.from(args?.id).toString();
