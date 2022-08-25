@@ -128,7 +128,7 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
         uint256 _start,
         uint256 _limit
     )
-        external
+        public
         view
         returns (
             address[] memory stakers_,
@@ -150,11 +150,19 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
         return (stakers_, amounts_, timestamps_);
     }
     /**
-     * @dev this function will be used by the onwer to revert all stakes and
-     * claims of this contract, in another words all the tokens will be returned
-     * to every staker.
+     * @dev this function will be used by the onwer to revert all stakes of a 
+     * given user.
      */
-    function revertAll() external onlyOwner {
+    function revertStakesFromAPlayer(address _staker, address _player) external onlyOwner {
+        uint256 total;    
+        
+        total = claimAmount[_staker] + stakerAmounts[_staker][_player];
 
+        eq9Contract.transfer(_staker, total);
+        stakerAddresses[_player].remove(_staker);
+        stakerAmounts[_staker][_player] = 0;
+        stakerTimestamps[_staker][_player] = 0;
+        claimAmount[_staker] = 0;
+        lastTimeUserUnstake[_staker] = 0;
     }
 }
