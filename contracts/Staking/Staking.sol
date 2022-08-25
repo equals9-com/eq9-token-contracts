@@ -36,8 +36,18 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
     mapping(address => uint256) public claimAmount;
     mapping(address => uint256) public lastTimeUserUnstake;
 
-    event Staked(uint256 amount, address player, address staker);
-    event Unstaked(uint256 amount, address player, address staker);
+    event Staked(
+        uint256 amount,
+        uint256 timestamp,
+        address player,
+        address staker
+    );
+    event Unstaked(
+        uint256 amount,
+        uint256 timestamp,
+        address player,
+        address staker
+    );
 
     constructor(address _eq9Contract) {
         name = "Staking Contract";
@@ -59,7 +69,7 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
         stakerAmounts[_player][msg.sender] += _amount;
 
         eq9Contract.safeTransferFrom(msg.sender, address(this), _amount);
-        emit Staked(_amount, _player, msg.sender);
+        emit Staked(_amount, block.timestamp, _player, msg.sender);
     }
 
     /**
@@ -89,7 +99,7 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
         lastTimeUserUnstake[msg.sender] = block.timestamp;
         stakerAmounts[_player][msg.sender] -= _amount;
         claimAmount[msg.sender] += _amount;
-        emit Unstaked(_amount, _player, msg.sender);
+        emit Unstaked(_amount, block.timestamp, _player, msg.sender);
     }
 
     /**
