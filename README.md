@@ -25,7 +25,7 @@ We have a testnet token without timelocks for testing on polygon:
 
 https://mumbai.polygonscan.com/token/tokenholderchart/0x7B4736f9C88c0A59310BfFD3F5d7462812aeC43B
 
-We have the staking contract deployed on mumbai: 0x11B8AbF80246E103786f7390bAf1688CAC5b466b
+    We have the staking contract deployed on mumbai: 0x5929Ab2f13b674e38f55815434BaBe3ee92F709f
 
 
 ## testing

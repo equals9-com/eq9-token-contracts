@@ -32,7 +32,7 @@ describe("Tournament with a ERC20 token as subscription", function () {
     );
     const rc = await tx.wait(); // 0ms, as tx is already confirmed
     const event = rc.events?.find(
-      (event) => event.event === "TournamentCreated"
+      (event: any) => event.event === "TournamentCreated"
     );
     expect(event?.args?.id).to.exist;
     tournamentId = event?.args?.id;
