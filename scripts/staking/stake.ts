@@ -6,7 +6,7 @@ async function main() {
   console.log("current balance", balance.toString());
 
   const eq9Address = "0x7B4736f9C88c0A59310BfFD3F5d7462812aeC43B";
-  const stakingAddress = "0x11B8AbF80246E103786f7390bAf1688CAC5b466b";
+  const stakingAddress = "0x5929Ab2f13b674e38f55815434BaBe3ee92F709f";
 
   const Staking = await ethers.getContractFactory("Staking");
   const EQ9 = await ethers.getContractFactory("EQ9");
@@ -17,7 +17,7 @@ async function main() {
   const eq9Balance = (await eq9.balanceOf(owner.address)).toString();
   console.log("eq9 balance", eq9Balance);
 
-  //   await eq9.approve(staking.address, ethers.utils.parseEther("10000"));
+  await eq9.approve(staking.address, ethers.utils.parseEther("10000"));
   await staking.stake(
     ethers.utils.parseEther("10"),
     "0xc92ca1ef967CA392e5F784BF72ffd468a264EcdB"
