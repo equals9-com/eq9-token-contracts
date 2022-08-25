@@ -159,4 +159,42 @@ describe("Staking with a ERC20 token (EQ9)", function () {
 
     expect(balance).to.be.equal(ethers.utils.parseEther("98"));
   });
+
+  it("should be able to revert stakes given a staker and a player", async () => {
+    const staker = accounts[1];
+    const player = accounts[2];
+
+    await stakingContract
+      .connect(staker)
+      .stake(ethers.utils.parseEther("2"), player.address);
+
+    await stakingContract.revertStakesFromAPlayer(
+      staker.address,
+      player.address
+    );
+
+    const amount = await stakingContract.stakerAmounts(
+      player.address,
+      staker.address
+    );
+
+    expect(amount).to.be.equal(ethers.utils.parseEther("0"));
+  });
+
+  it("should not be able to revert stakes if the given staker and player does not have any", async () => {
+    const staker = accounts[1];
+    const player = accounts[7];
+
+    await expect(
+      stakingContract.revertStakesFromAPlayer(staker.address, player.address)
+    ).to.be.rejected;
+  });
+
+  it("should be able to pause set pause true", async () => {
+    await stakingContract.pause();
+  });
+
+  it("should be able to pause set pause false", async () => {
+    await stakingContract.unpause();
+  });
 });

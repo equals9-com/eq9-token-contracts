@@ -23,11 +23,12 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
 
     string public name;
     IERC20 eq9Contract;
+    error NoStakeAndClaimFound();
 
     // A player address will have many stakers
     mapping(address => EnumerableSet.AddressSet) private stakerAddresses;
 
-    // these mappings are always of the form [stakerAddres][playerAddress]
+    // these mappings are always of the form [playerAddress][stakerAddres]
     mapping(address => mapping(address => uint256)) public stakerTimestamps;
     mapping(address => mapping(address => uint256)) public stakerAmounts;
 
@@ -60,7 +61,7 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
      * @param _amount value of EQ9 to stake
      * @param _player address of the player to stake
      */
-    function stake(uint256 _amount, address _player) public {
+    function stake(uint256 _amount, address _player) public whenNotPaused {
         if (!stakerAddresses[_player].contains(msg.sender)) {
             stakerAddresses[_player].add(msg.sender);
             stakerTimestamps[_player][msg.sender] = block.timestamp;
@@ -138,7 +139,7 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
         uint256 _start,
         uint256 _limit
     )
-        public
+        external
         view
         returns (
             address[] memory stakers_,
@@ -146,9 +147,9 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
             uint256[] memory timestamps_
         )
     {
-        address[] memory stakers_ = new address[](_limit);
-        uint256[] memory amounts_ = new uint256[](_limit);
-        uint256[] memory timestamps_ = new uint256[](_limit);
+        stakers_ = new address[](_limit);
+        amounts_ = new uint256[](_limit);
+        timestamps_ = new uint256[](_limit);
 
         for (uint256 i = _start; i < _limit; i++) {
             address staker = stakerAddresses[_player].at(i);
@@ -164,15 +165,27 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
      * given user.
      */
     function revertStakesFromAPlayer(address _staker, address _player) external onlyOwner {
-        uint256 total;    
+        uint256 total;
+
+        if(claimAmount[_staker] == 0 && stakerAmounts[_player][_staker] == 0){
+            revert NoStakeAndClaimFound();
+        }
         
         total = claimAmount[_staker] + stakerAmounts[_staker][_player];
 
         eq9Contract.transfer(_staker, total);
         stakerAddresses[_player].remove(_staker);
-        stakerAmounts[_staker][_player] = 0;
-        stakerTimestamps[_staker][_player] = 0;
+        stakerAmounts[_player][_staker] = 0;
+        stakerTimestamps[_player][_staker] = 0;
         claimAmount[_staker] = 0;
         lastTimeUserUnstake[_staker] = 0;
+    }
+
+    function pause() public onlyOwner {
+        _pause();
+    }
+
+    function unpause() public onlyOwner {
+        _unpause();
     }
 }
