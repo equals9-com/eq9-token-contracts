@@ -19,8 +19,8 @@ async function main() {
   console.log("eq9 balance", eq9Balance);
 
   // await eq9.approve(staking.address, ethers.utils.parseEther("10000"));
-  await staking.stake(
-    ethers.utils.parseEther("10"),
+  await staking.unstake(
+    ethers.utils.parseEther("50"),
     "0xc92ca1ef967CA392e5F784BF72ffd468a264EcdB"
   );
 }
