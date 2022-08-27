@@ -48,6 +48,7 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
         address player,
         address staker
     );
+    event Claimed(uint256 amount, uint256 timestamp, address staker);
 
     constructor(address _eq9Contract) {
         name = "Staking Contract";
@@ -81,7 +82,7 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
      * @param _amount value of EQ9 to unstake
      * @param _player address of the player to stake
      */
-    function unstake(uint256 _amount, address _player) public {
+    function unstake(uint256 _amount, address _player) public nonReentrant {
         require(
             stakerAddresses[_player].contains(msg.sender),
             "You are not staking into this player address"
@@ -109,14 +110,15 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
      * once in 24 hours unless he peform another unstake elsewhere
      * @notice the user will always claim the total value of claimAmount
      */
-    function claim() external {
+    function claim() external nonReentrant {
         require(
             block.timestamp >= lastTimeUserUnstake[msg.sender] + 24 hours,
             "Unable to claim, 24 hours still have not have passed"
         );
-
-        eq9Contract.transfer(msg.sender, claimAmount[msg.sender]);
+        uint256 toSendAmount = claimAmount[msg.sender];
         claimAmount[msg.sender] = 0;
+        eq9Contract.transfer(msg.sender, toSendAmount);
+        emit Claimed(toSendAmount, block.timestamp, msg.sender);
     }
 
     function fetchStakersAmount(address _player)
@@ -160,17 +162,21 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
 
         return (stakers_, amounts_, timestamps_);
     }
+
     /**
-     * @dev this function will be used by the onwer to revert all stakes of a 
+     * @dev this function will be used by the onwer to revert all stakes of a
      * given user.
      */
-    function revertStakesFromAPlayer(address _staker, address _player) external onlyOwner {
+    function revertStakesFromAPlayer(address _staker, address _player)
+        external
+        onlyOwner
+    {
         uint256 total;
 
-        if(claimAmount[_staker] == 0 && stakerAmounts[_player][_staker] == 0){
+        if (claimAmount[_staker] == 0 && stakerAmounts[_player][_staker] == 0) {
             revert NoStakeAndClaimFound();
         }
-        
+
         total = claimAmount[_staker] + stakerAmounts[_staker][_player];
 
         eq9Contract.transfer(_staker, total);
