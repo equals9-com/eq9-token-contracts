@@ -1,6 +1,6 @@
 import { ethers } from "hardhat";
-import { timelockConfigs } from "../config/timelockConfig";
-import { TokenMultiTimelock } from "../types";
+import { timelockConfigs } from "../../config/timelockConfig";
+import { TokenMultiTimelock } from "../../types";
 
 const getUnixTime = (date: Date): number => {
   return Math.floor(date.getTime() / 1000);

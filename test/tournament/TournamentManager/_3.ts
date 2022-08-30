@@ -8,7 +8,7 @@ chai.use(chaiAsPromised);
 
 const { expect } = chai;
 
-describe("Tournament with a rc20 token as subscription", function () {
+describe("Tournament with a ERC20 token as subscription", function () {
   let tournamentManager: TournamentManager;
   let eq9: EQ9;
   let tournamentId: string;
@@ -32,7 +32,7 @@ describe("Tournament with a rc20 token as subscription", function () {
     );
     const rc = await tx.wait(); // 0ms, as tx is already confirmed
     const event = rc.events?.find(
-      (event) => event.event === "TournamentCreated"
+      (event: any) => event.event === "TournamentCreated"
     );
     expect(event?.args?.id).to.exist;
     tournamentId = event?.args?.id;

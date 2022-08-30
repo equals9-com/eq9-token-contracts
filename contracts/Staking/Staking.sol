@@ -9,11 +9,12 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
+import "hardhat/console.sol";
+
 /**
  * @title Staking
  * @notice This contract allows to stake EQ9 into players of equalssport.
  * Staking rewards are calculated off-chain, but baased on this contract.
- *yarn
  */
 
 contract Staking is Ownable, ReentrancyGuard, Pausable {
@@ -22,15 +23,32 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
 
     string public name;
     IERC20 eq9Contract;
+    error NoStakeAndClaimFound();
 
-    // Declare a set state variable
-
+    // A player address will have many stakers
     mapping(address => EnumerableSet.AddressSet) private stakerAddresses;
+
+    // these mappings are always of the form [playerAddress][stakerAddres]
     mapping(address => mapping(address => uint256)) public stakerTimestamps;
     mapping(address => mapping(address => uint256)) public stakerAmounts;
 
-    event Staked(uint256 amount, address staker, address player);
-    event Unstaked(uint256 amount, address staker, address player);
+    //
+    mapping(address => uint256) public claimAmount;
+    mapping(address => uint256) public lastTimeUserUnstake;
+
+    event Staked(
+        uint256 amount,
+        uint256 timestamp,
+        address player,
+        address staker
+    );
+    event Unstaked(
+        uint256 amount,
+        uint256 timestamp,
+        address player,
+        address staker
+    );
+    event Claimed(uint256 amount, uint256 timestamp, address staker);
 
     constructor(address _eq9Contract) {
         name = "Staking Contract";
@@ -44,15 +62,15 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
      * @param _amount value of EQ9 to stake
      * @param _player address of the player to stake
      */
-    function stake(uint256 _amount, address _player) public {
+    function stake(uint256 _amount, address _player) public whenNotPaused {
         if (!stakerAddresses[_player].contains(msg.sender)) {
             stakerAddresses[_player].add(msg.sender);
             stakerTimestamps[_player][msg.sender] = block.timestamp;
         }
-        stakerAmounts[_player][msg.sender] += _amount;
 
+        stakerAmounts[_player][msg.sender] += _amount;
         eq9Contract.safeTransferFrom(msg.sender, address(this), _amount);
-        emit Staked(_amount, msg.sender, _player);
+        emit Staked(_amount, block.timestamp, _player, msg.sender);
     }
 
     /**
@@ -64,45 +82,116 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
      * @param _amount value of EQ9 to unstake
      * @param _player address of the player to stake
      */
-    function unstake(uint256 _amount, address _player) public {
+    function unstake(uint256 _amount, address _player) public nonReentrant {
         require(
             stakerAddresses[_player].contains(msg.sender),
-            "not staking into player address"
+            "You are not staking into this player address"
+        );
+        require(
+            _amount <= stakerAmounts[_player][msg.sender],
+            "Not enough staked amount into the player"
         );
 
-        uint256 finalAmount = stakerAmounts[_player][msg.sender] - _amount;
-        if (finalAmount == 0) {
+        if (stakerAmounts[_player][msg.sender] == _amount) {
             stakerAddresses[_player].remove(msg.sender);
-            stakerAmounts[_player][msg.sender] = 0;
             stakerTimestamps[_player][msg.sender] = 0;
         }
 
+        lastTimeUserUnstake[msg.sender] = block.timestamp;
         stakerAmounts[_player][msg.sender] -= _amount;
-        eq9Contract.transfer(msg.sender, _amount);
-        emit Unstaked(_amount, msg.sender, _player);
+        claimAmount[msg.sender] += _amount;
+        emit Unstaked(_amount, block.timestamp, _player, msg.sender);
     }
 
+    /**
+     * @dev function used to the user claim the unstake
+     * performed at unstake function, here is where the user
+     * in fact will get the unstaked tokens with a limit of
+     * once in 24 hours unless he peform another unstake elsewhere
+     * @notice the user will always claim the total value of claimAmount
+     */
+    function claim() external nonReentrant {
+        require(
+            block.timestamp >= lastTimeUserUnstake[msg.sender] + 24 hours,
+            "Unable to claim, 24 hours still have not have passed"
+        );
+        uint256 toSendAmount = claimAmount[msg.sender];
+        claimAmount[msg.sender] = 0;
+        eq9Contract.transfer(msg.sender, toSendAmount);
+        emit Claimed(toSendAmount, block.timestamp, msg.sender);
+    }
 
     function fetchStakersAmount(address _player)
         external
         view
-        returns (
-            uint256 _stakersAmount
-        )
+        returns (uint256 _stakersAmount)
     {
         _stakersAmount = stakerAddresses[_player].length();
     }
 
-    function fetchPlayerStakers(address _player)
+    /**
+     * @dev function used to fetch all stakes into a player
+     * @param _player address of the player receiving stakes
+     * @param _start index to start the array.
+     * @param _limit index to end search
+     */
+
+    function fetchPlayerStakes(
+        address _player,
+        uint256 _start,
+        uint256 _limit
+    )
         external
         view
-        returns (address[]  memory _stakerAddresses,
-            uint256[]  memory _stakerAmounts,
-            uint256[] memory stakerTimestamps        
+        returns (
+            address[] memory stakers_,
+            uint256[] memory amounts_,
+            uint256[] memory timestamps_
         )
     {
-        _stakerAddresses = stakerAddresses[_player].values();
-        _stakerTimestamps
+        stakers_ = new address[](_limit);
+        amounts_ = new uint256[](_limit);
+        timestamps_ = new uint256[](_limit);
+
+        for (uint256 i = _start; i < _limit; i++) {
+            address staker = stakerAddresses[_player].at(i);
+            stakers_[i] = staker;
+            amounts_[i] = stakerAmounts[_player][staker];
+            timestamps_[i] = stakerTimestamps[_player][staker];
+        }
+
+        return (stakers_, amounts_, timestamps_);
     }
 
+    /**
+     * @dev this function will be used by the onwer to revert all stakes of a
+     * given user.
+     */
+    function revertStakesFromAPlayer(address _staker, address _player)
+        external
+        onlyOwner
+    {
+        uint256 total;
+
+        if (claimAmount[_staker] == 0 && stakerAmounts[_player][_staker] == 0) {
+            revert NoStakeAndClaimFound();
+        }
+
+        total = claimAmount[_staker] + stakerAmounts[_staker][_player];
+
+        eq9Contract.transfer(_staker, total);
+        stakerAddresses[_player].remove(_staker);
+        stakerAmounts[_player][_staker] = 0;
+        stakerTimestamps[_player][_staker] = 0;
+        claimAmount[_staker] = 0;
+        lastTimeUserUnstake[_staker] = 0;
+    }
+
+    function pause() public onlyOwner {
+        _pause();
+    }
+
+    function unpause() public onlyOwner {
+        _unpause();
+    }
 }
