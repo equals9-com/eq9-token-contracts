@@ -62,7 +62,7 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
      * @param _amount value of EQ9 to stake
      * @param _player address of the player to stake
      */
-    function stake(uint256 _amount, address _player) public whenNotPaused {
+    function stake(uint256 _amount, address _player) external whenNotPaused {
         if (!stakerAddresses[_player].contains(msg.sender)) {
             stakerAddresses[_player].add(msg.sender);
             stakerTimestamps[_player][msg.sender] = block.timestamp;
@@ -82,7 +82,7 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
      * @param _amount value of EQ9 to unstake
      * @param _player address of the player to stake
      */
-    function unstake(uint256 _amount, address _player) public nonReentrant {
+    function unstake(uint256 _amount, address _player) external nonReentrant {
         require(
             stakerAddresses[_player].contains(msg.sender),
             "You are not staking into this player address"
