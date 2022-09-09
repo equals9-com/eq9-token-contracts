@@ -4,7 +4,12 @@ coverage
 coverage.json
 typechain
 
+
+scripts/revert_virtual/users_and_wallets.ts
+
+
 #Hardhat files
 cache
 artifacts
 types
+
