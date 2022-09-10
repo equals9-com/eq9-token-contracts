@@ -9,8 +9,8 @@ async function main() {
   console.log("current address", owner.address);
   console.log("current balance", balance.toString());
 
-  const eq9Address = String(process.env.MUMBAI_EQ9_ADDRESS);
-  const psAddress = "0x7862176f6833d14c5659fa41106b8c40E0093C43";
+  const eq9Address = String(process.env.POLYGON_EQ9_ADDRESS);
+  const psAddress = "0x18E8175BcDf238FAB20A1A1e319F6A98Ba687fE5";
 
   // deposit eq9 in the paymentSplitter contract
   const PaymentSplitter = await ethers.getContractFactory("PaymentSplitter");
@@ -26,7 +26,7 @@ async function main() {
   const eq9Balance = await eq9.balanceOf(psAddress);
   console.log("eq9 balance of contract", ethers.utils.formatEther(eq9Balance));
 
-  if ((await eq9.balanceOf(psAddress)).eq("0")) {
+  if (eq9Balance.eq("0")) {
     console.log("all shares released");
     return;
   }
@@ -42,6 +42,14 @@ async function main() {
   }
 
   for (const payee of payees) {
+    const shares = await paymentSplitter["releasable(address,address)"](
+      eq9Address,
+      payee
+    );
+    if (shares.eq("0")) {
+      console.log("shares are 0. continuing");
+      continue;
+    }
     const tx = await paymentSplitter["release(address,address)"](
       eq9.address,
       payee

@@ -9,7 +9,7 @@ async function main() {
   console.log("current address", owner.address);
   console.log("current balance", balance.toString());
 
-  const eq9Address = String(process.env.MUMBAI_EQ9_ADDRESS);
+  const eq9Address = String(process.env.POLYGON_EQ9_ADDRESS);
   console.log(eq9Address);
 
   const EQ9 = await ethers.getContractFactory("EQ9");
