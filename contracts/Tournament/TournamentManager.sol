@@ -34,6 +34,7 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
         IERC20 token;
         uint256 totalShares;
         uint256 totalAccTokenReward;
+        uint256 sponsorTotalAcc;
         uint256 tokenFee;
         TournamentState state;
     }
@@ -77,7 +78,7 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
         address token
     );
     event TournamentCanceled(uint256 indexed id);
-    event PayeeAdded(address account, uint256 shares);
+    event PayeeAdded(address account, uint256 shares, uint256 sponsorRewardCut);
     event PaymentReleased(address to, uint256 amount);
     event PaymentReceived(address from, uint256 amount);
     event prizeIncreased(
@@ -375,6 +376,7 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
         );
 
         tournament.totalAccTokenReward += msg.value;
+        tournament.sponsorTotalAcc += msg.value;
         sponsors[_id].push(
             Sponsor({walletAddress: msg.sender, amount: msg.value})
         );
@@ -402,6 +404,7 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
 
         tournament.token.safeTransferFrom(msg.sender, address(this), _amount);
         tournament.totalAccTokenReward += _amount;
+        tournament.sponsorTotalAcc += _amount;
         sponsors[_id].push(
             Sponsor({walletAddress: msg.sender, amount: _amount})
         );
@@ -499,7 +502,7 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
         uint256 _id,
         address[] memory _payees,
         uint256[] memory _shares
-    ) public payable onlyAdmin(_id) {
+    ) public onlyAdmin(_id) {
         Tournament storage tournament = tournaments[_id];
         require(
             _payees.length == _shares.length,
@@ -533,10 +536,13 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
             "PaymentSplitter: account is the zero address"
         );
         require(_shares > 0, "PaymentSplitter: shares are 0");
+        require(players[_id].length > 0, "No players joined the tournament");
 
-        shares[_account] += _shares;
-        tournament.totalShares += _shares;
-        emit PayeeAdded(_account, _shares);
+        uint256 sponsorsRewardCut = tournament.sponsorTotalAcc /
+            players[_id].length;
+        shares[_account] += _shares + sponsorsRewardCut;
+        tournament.totalShares += _shares + sponsorsRewardCut;
+        emit PayeeAdded(_account, _shares, sponsorsRewardCut);
     }
 
     /**
@@ -545,16 +551,23 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
      * @param _account the receiver address of the shares
      * @param _amount the amount to be received
      */
-    function release(address payable _account, uint256 _amount)
-        public
-        nonReentrant
-    {
+    function release(
+        uint256 _id,
+        address payable _account,
+        uint256 _amount
+    ) public payable nonReentrant {
         require(shares[_account] > 0, "account has no shares");
         require(_amount <= shares[_account], "amount exceeds shares");
+        Tournament storage tournament = tournaments[_id];
 
         shares[_account] -= _amount;
 
-        Address.sendValue(_account, _amount);
+        if (tournament.token == IERC20(address(0))) {
+            Address.sendValue(_account, _amount);
+        } else {
+            tournament.token.safeTransfer(_account, _amount);
+        }
+
         emit PaymentReleased(_account, _amount);
     }
 

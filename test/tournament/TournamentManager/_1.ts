@@ -143,6 +143,7 @@ describe("Tournament with native token as subscription", async function () {
 
     for (let i = 1; i < 5; i++) {
       await tournamentManager.release(
+        id,
         accounts[i].address,
         await tournamentManager.shares(accounts[i].address)
       );

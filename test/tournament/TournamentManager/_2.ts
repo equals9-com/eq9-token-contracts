@@ -76,6 +76,7 @@ describe("Tournament with a prize added and free subscription ", async function 
 
     for (let i = 1; i < 5; i++) {
       await tournamentManager.release(
+        id,
         accounts[i].address,
         await tournamentManager.shares(accounts[i].address)
       );
@@ -96,6 +97,7 @@ describe("Tournament with a prize added and free subscription ", async function 
 
     await expect(
       tournamentManager.release(
+        id,
         accounts[11].address,
         await tournamentManager.shares(accounts[11].address)
       )
@@ -112,6 +114,7 @@ describe("Tournament with a prize added and free subscription ", async function 
 
     await expect(
       tournamentManager.release(
+        id,
         accounts[4].address,
         ethers.utils.parseEther("99999")
       )
@@ -133,6 +136,7 @@ describe("Tournament with a prize added and free subscription ", async function 
 
     for (let i = 1; i < 5; i++) {
       await tournamentManager.release(
+        id,
         accounts[i].address,
         await tournamentManager.shares(accounts[i].address)
       );
