@@ -78,7 +78,7 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
         address token
     );
     event TournamentCanceled(uint256 indexed id);
-    event PayeeAdded(address account, uint256 shares, uint256 sponsorRewardCut);
+    event PayeeAdded(address account, uint256 shares);
     event PaymentReleased(address to, uint256 amount);
     event PaymentReceived(address from, uint256 amount);
     event prizeIncreased(
@@ -204,6 +204,7 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
         } else {
             tournament.token.safeTransfer(_sponsor, _amount);
             tournament.totalAccTokenReward -= _amount;
+            tournament.sponsorTotalAcc -= _amount;
             emit SubscriptionCancelled(
                 _id,
                 _sponsor,
@@ -538,11 +539,10 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
         require(_shares > 0, "PaymentSplitter: shares are 0");
         require(players[_id].length > 0, "No players joined the tournament");
 
-        uint256 sponsorsRewardCut = tournament.sponsorTotalAcc /
-            players[_id].length;
-        shares[_account] += _shares + sponsorsRewardCut;
-        tournament.totalShares += _shares + sponsorsRewardCut;
-        emit PayeeAdded(_account, _shares, sponsorsRewardCut);
+        
+        shares[_account] += _shares;
+        tournament.totalShares += _shares;
+        emit PayeeAdded(_account, _shares);
     }
 
     /**
@@ -567,6 +567,7 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
         } else {
             tournament.token.safeTransfer(_account, _amount);
         }
+        tournament.totalAccTokenReward -= _amount;
 
         emit PaymentReleased(_account, _amount);
     }
