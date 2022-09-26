@@ -510,14 +510,17 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
             "payees and shares length mismatch"
         );
         require(_payees.length > 0, "no payees");
+        uint256 totalAccTokenRewardBeforeSplitting = tournament.totalAccTokenReward;
 
         for (uint256 i = 0; i < _payees.length; i++) {
             _addPayee(_id, _payees[i], _shares[i]);
         }
+
         require(
-            tournament.totalShares <= tournament.totalAccTokenReward,
+            tournament.totalShares <= totalAccTokenRewardBeforeSplitting,
             "mismatch between accumulated and distributed"
         );
+        tournament.totalShares = 0;
     }
 
     /**
@@ -538,10 +541,11 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
         );
         require(_shares > 0, "PaymentSplitter: shares are 0");
         require(players[_id].length > 0, "No players joined the tournament");
-
+        require(tournament.totalAccTokenReward >= _shares, "Shares greater than accumulated token reward");
         
         shares[_account] += _shares;
         tournament.totalShares += _shares;
+        tournament.totalAccTokenReward -= _shares;
         emit PayeeAdded(_account, _shares);
     }
 
@@ -567,7 +571,6 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
         } else {
             tournament.token.safeTransfer(_account, _amount);
         }
-        tournament.totalAccTokenReward -= _amount;
 
         emit PaymentReleased(_account, _amount);
     }

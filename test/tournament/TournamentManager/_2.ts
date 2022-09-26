@@ -1,12 +1,7 @@
-import chai from "chai";
-import chaiAsPromised from "chai-as-promised";
+import { expect } from "chai";
 import { ethers } from "hardhat";
 import { TournamentManager } from "../../../types";
 const { BigNumber } = ethers;
-
-chai.use(chaiAsPromised);
-
-const { expect } = chai;
 
 describe("Tournament with a prize added and free subscription ", async function () {
   let tournamentManager: TournamentManager;
@@ -37,7 +32,7 @@ describe("Tournament with a prize added and free subscription ", async function 
 
   it("should allow a wallet to add a prize", async function () {
     await tournamentManager.addPrize(id, {
-      value: ethers.utils.parseEther("1000"),
+      value: ethers.utils.parseEther("90"),
     });
   });
 
@@ -53,7 +48,7 @@ describe("Tournament with a prize added and free subscription ", async function 
       tournamentManager.address
     );
     expect(balance.toString()).to.be.equal(
-      ethers.utils.parseEther("1000").toString()
+      ethers.utils.parseEther("90").toString()
     );
   });
 
@@ -86,9 +81,9 @@ describe("Tournament with a prize added and free subscription ", async function 
       tournamentManager.address
     );
 
-    // 960 because 4 players received 10 each and the accumulated prize was 1000
+    // 50 because 4 players received 10 each and the accumulated prize was 90
     expect(balance.toString()).to.be.equal(
-      ethers.utils.parseEther("960").toString()
+      ethers.utils.parseEther("50").toString()
     );
   });
 
@@ -101,13 +96,13 @@ describe("Tournament with a prize added and free subscription ", async function 
         accounts[11].address,
         await tournamentManager.shares(accounts[11].address)
       )
-    ).to.be.rejected;
+    ).to.be.revertedWith("account has no shares");
   });
 
   it("should not allow receiver wallets to claim funds if the amount is greater than the available share", async function () {
     const accounts = await ethers.getSigners();
 
-    const payees = [accounts[4].address];
+    const payees = [accounts[11].address];
     const shares = [ethers.utils.parseEther("10")];
 
     await tournamentManager.splitPayment(id, payees, shares);
@@ -115,10 +110,10 @@ describe("Tournament with a prize added and free subscription ", async function 
     await expect(
       tournamentManager.release(
         id,
-        accounts[4].address,
+        accounts[11].address,
         ethers.utils.parseEther("99999")
       )
-    ).to.be.rejected;
+    ).to.be.revertedWith("amount exceeds shares");
   });
 
   it("the admin should be able to split rewards once again, until all funds are distributed", async function () {
@@ -147,24 +142,24 @@ describe("Tournament with a prize added and free subscription ", async function 
     );
 
     expect(balance.toString()).to.be.equal(
-      ethers.utils.parseEther("910").toString()
+      ethers.utils.parseEther("10").toString()
     );
   });
 
-  it("it should revert in case distributed funds between addresses is greater than the amount allocated to the tournament", async function () {
+  it("should revert in case distributed funds between addresses is greater than the amount allocated to the tournament", async function () {
     const accounts = await ethers.getSigners();
 
     const payees = [];
     const shares = [];
 
-    for (let i = 1; i < 5; i++) {
+    for (let i = 10; i < 15; i++) {
       payees.push(accounts[i].address);
       shares.push(ethers.utils.parseEther("500"));
     }
 
     await expect(
       tournamentManager.splitPayment(id, payees, shares)
-    ).to.be.revertedWith("mismatch between accumulated and distributed");
+    ).to.be.revertedWith("Shares greater than accumulated token reward");
   });
 
   it("should not distribute funds between addresses if payees and shares are not of same length", async function () {
@@ -173,30 +168,33 @@ describe("Tournament with a prize added and free subscription ", async function 
     const payees = [];
     const shares = [];
 
-    for (let i = 1; i < 5; i++) {
+    for (let i = 10; i < 15; i++) {
       payees.push(accounts[i].address);
       shares.push(ethers.utils.parseEther("500"));
     }
-    payees.push(accounts[5].address);
+    payees.push(accounts[15].address);
 
-    await expect(tournamentManager.splitPayment(id, payees, shares)).to.be
-      .rejected;
+    await expect(
+      tournamentManager.splitPayment(id, payees, shares)
+    ).to.be.revertedWith("payees and shares length mismatch");
   });
 
   it("should not distribute funds between addresses if payees length is zero", async function () {
     const payees: string[] = [];
     const shares: string[] = [];
 
-    await expect(tournamentManager.splitPayment(id, payees, shares)).to.be
-      .rejected;
+    await expect(
+      tournamentManager.splitPayment(id, payees, shares)
+    ).to.be.revertedWith("no payees");
   });
 
   it("should not distribute funds between addresses if a payee is address zero", async function () {
     const payees = [ethers.constants.AddressZero];
     const shares = [ethers.utils.parseEther("10")];
 
-    await expect(tournamentManager.splitPayment(id, payees, shares)).to.be
-      .rejected;
+    await expect(
+      tournamentManager.splitPayment(id, payees, shares)
+    ).to.be.revertedWith("PaymentSplitter: account is the zero address");
   });
 
   it("should not distribute funds between addresses if a share is zero", async function () {
@@ -210,7 +208,8 @@ describe("Tournament with a prize added and free subscription ", async function 
       shares.push(ethers.utils.parseEther("0"));
     }
 
-    await expect(tournamentManager.splitPayment(id, payees, shares)).to.be
-      .rejected;
+    await expect(
+      tournamentManager.splitPayment(id, payees, shares)
+    ).to.be.revertedWith("PaymentSplitter: shares are 0");
   });
 });
