@@ -212,4 +212,35 @@ describe("Tournament with a prize added and free subscription ", async function 
       tournamentManager.splitPayment(id, payees, shares)
     ).to.be.revertedWith("PaymentSplitter: shares are 0");
   });
+
+  it("should not be able to split payments with no players joined to the tournament", async () => {
+    const Tournament = await ethers.getContractFactory("TournamentManager");
+    tournamentManager = await Tournament.deploy();
+    await tournamentManager.deployed();
+
+    const tx = await tournamentManager.createTournament(
+      ethers.utils.parseEther("0"),
+      ethers.constants.AddressZero
+    );
+    const rc = await tx.wait(); // 0ms, as tx is already confirmed
+    const event = rc.events?.find(
+      (event: any) => event.event === "TournamentCreated"
+    );
+    const args = event?.args;
+    id = BigNumber.from(args?.id).toString();
+
+    const accounts = await ethers.getSigners();
+
+    const payees = [];
+    const shares = [];
+
+    for (let i = 1; i < 5; i++) {
+      payees.push(accounts[i].address);
+      shares.push(ethers.utils.parseEther("10"));
+    }
+
+    await expect(
+      tournamentManager.splitPayment(id, payees, shares)
+    ).to.be.revertedWith("No players joined the tournament");
+  });
 });
