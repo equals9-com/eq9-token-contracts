@@ -4,7 +4,9 @@ This repository contains the source code and a small test file to test the custo
 the eq9 token.
 
 
-## deployed contracts addresses
+# deployed contracts addresses
+
+## On Harmony mainnet before network change (LEGACY)
 
 The contract is deployed in the following addres: `0x598228643d6faa1b5569c3d996cb8cf8ca1fdb92`
 on the harmony mainnet network.
@@ -12,7 +14,9 @@ on the harmony mainnet network.
 You can check it on the explorer: https://explorer.harmony.one/address/0x598228643d6faa1b5569c3d996cb8cf8ca1fdb92
 
 
-## On Polygon mainnet after the network change
+## Contracts on Polygon mainnet after the network change
+
+EQ9 address on polygon mainnet: `0x3963a400b42377376d6c3d92ddf2d6288d8ee0d6`
 
 https://polygonscan.com/token/0x3963a400b42377376d6c3d92ddf2d6288d8ee0d6#balances
 
@@ -35,13 +39,27 @@ polygonscan:
 https://polygonscan.com/address/0x1D04657D4dC9f544A2BC3030011EA2b0f121C1Fc
 
 
-## On polygon mumbai testnet
+## All contracts on polygon mumbai testnet from here
 
-We have a testnet token without timelocks for testing on polygon:
+EQ9 token on mumbai testnet: `0x7B4736f9C88c0A59310BfFD3F5d7462812aeC43B`
+
 
 https://mumbai.polygonscan.com/token/tokenholderchart/0x7B4736f9C88c0A59310BfFD3F5d7462812aeC43B
 
-    We have the staking contract deployed on mumbai: 0x5929Ab2f13b674e38f55815434BaBe3ee92F709f
+### Staking contract
+
+The Staking contract address is `0x437070cAf868604bE93613627f99a655586EE7C9` and it's also verified on mumbai scan:
+
+https://mumbai.polygonscan.com/address/0x437070cAf868604bE93613627f99a655586EE7C9#code    
+
+
+### TournamentManager contract
+
+The tournament manager contract address is `0x0db45d5D10Fe73e42d57df4E69A9248dCDcC98BA` and it's also verified on 
+mumbai scan:
+
+https://polygonscan.com/address/0x0db45d5D10Fe73e42d57df4E69A9248dCDcC98BA
+
 
 
 ## testing
