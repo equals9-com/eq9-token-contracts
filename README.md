@@ -27,6 +27,14 @@ The Staking contract address is `0xC5A3B0B59d4Ed2AB73B5f3fEf956525F9d5ee2e7` and
 https://polygonscan.com/address/0xC5A3B0B59d4Ed2AB73B5f3fEf956525F9d5ee2e7#code
 
 
+### Tournament manager contract
+
+The tournament manager contract address is `0x1D04657D4dC9f544A2BC3030011EA2b0f121C1Fc` and it's also verified on 
+polygonscan:
+
+https://polygonscan.com/address/0x1D04657D4dC9f544A2BC3030011EA2b0f121C1Fc
+
+
 ## On polygon mumbai testnet
 
 We have a testnet token without timelocks for testing on polygon:
