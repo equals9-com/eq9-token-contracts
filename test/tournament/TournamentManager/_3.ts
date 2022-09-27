@@ -1,12 +1,7 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import chai from "chai";
-import chaiAsPromised from "chai-as-promised";
+import { expect } from "chai";
 import { ethers } from "hardhat";
 import { EQ9, TournamentManager } from "../../../types";
-
-chai.use(chaiAsPromised);
-
-const { expect } = chai;
 
 describe("Tournament with a ERC20 token as subscription", function () {
   let tournamentManager: TournamentManager;
@@ -61,15 +56,11 @@ describe("Tournament with a ERC20 token as subscription", function () {
   it("should not be able to subscribe a player if the tournament is not in a waiting state", async () => {
     await tournamentManager.setStartedState(tournamentId);
 
-    await expect(tournamentManager.connect(accounts[9]).joinERC20(tournamentId))
-      .to.be.rejected;
+    await expect(
+      tournamentManager.connect(accounts[9]).joinERC20(tournamentId)
+    ).to.be.rejectedWith("tournament not waiting");
 
     await tournamentManager.setWaitingState(tournamentId);
-  });
-
-  it("should not be able to subscribe a player the amount is incorrect", async () => {
-    await expect(tournamentManager.connect(accounts[9]).joinERC20(tournamentId))
-      .to.be.rejected;
   });
 
   it("should not be able to subscribe a player twice in the same tournament", async () => {
@@ -79,8 +70,9 @@ describe("Tournament with a ERC20 token as subscription", function () {
 
     await tournamentManager.connect(accounts[9]).joinERC20(tournamentId);
 
-    await expect(tournamentManager.connect(accounts[9]).joinERC20(tournamentId))
-      .to.be.rejected;
+    await expect(
+      tournamentManager.connect(accounts[9]).joinERC20(tournamentId)
+    ).to.be.rejectedWith("player has already joined");
   });
 
   it("should allow a wallet to add a prize using erc20 token", async function () {
@@ -98,7 +90,7 @@ describe("Tournament with a ERC20 token as subscription", function () {
         tournamentId,
         ethers.utils.parseEther("0")
       )
-    ).to.be.rejected;
+    ).to.be.rejectedWith("prize increase must be greater than 0");
   });
 
   it("should not allow a wallet to add a prize using token if the tournament state is different from waiting using ERC20", async function () {
@@ -109,7 +101,7 @@ describe("Tournament with a ERC20 token as subscription", function () {
         tournamentId,
         ethers.utils.parseEther("10")
       )
-    ).to.be.rejected;
+    ).to.be.rejectedWith("tournament already started or ended");
 
     await tournamentManager.setWaitingState(tournamentId);
   });
@@ -119,7 +111,9 @@ describe("Tournament with a ERC20 token as subscription", function () {
       tournamentManager
         .connect(accounts[17])
         .join(tournamentId, { value: ethers.utils.parseEther("10") })
-    ).to.be.rejected;
+    ).to.be.rejectedWith(
+      "only avaible if theres no token ERC20 specified for this tournament"
+    );
   });
 
   it("should be able to allow a user to pay for someone else to join with ERC20", async () => {
@@ -129,45 +123,23 @@ describe("Tournament with a ERC20 token as subscription", function () {
 
     await tournamentManager
       .connect(accounts[18])
-      .joinSomeoneElseERC20(
-        tournamentId,
-        accounts[19].address,
-        ethers.utils.parseEther("10")
-      );
+      .joinSomeoneElseERC20(tournamentId, accounts[19].address);
   });
 
   it("should not be able to allow a user to pay for someone else to join if tournament state is not waiting for ERC20", async () => {
     await tournamentManager.setStartedState(tournamentId);
 
     await expect(
-      tournamentManager.joinSomeoneElseERC20(
-        tournamentId,
-        accounts[15].address,
-        ethers.utils.parseEther("10")
-      )
-    ).to.be.rejected;
+      tournamentManager.joinSomeoneElseERC20(tournamentId, accounts[15].address)
+    ).to.be.rejectedWith("tournament already started or ended");
 
     await tournamentManager.setWaitingState(tournamentId);
   });
 
-  it("should not be able to allow a user to pay for someone else to join if the value is incorrect", async () => {
-    await expect(
-      tournamentManager.joinSomeoneElseERC20(
-        tournamentId,
-        accounts[15].address,
-        ethers.utils.parseEther("9")
-      )
-    ).to.be.rejected;
-  });
-
   it("should not be able to allow a user to pay for someone else to join if the user is already joined", async () => {
     await expect(
-      tournamentManager.joinSomeoneElseERC20(
-        tournamentId,
-        accounts[1].address,
-        ethers.utils.parseEther("10")
-      )
-    ).to.be.rejected;
+      tournamentManager.joinSomeoneElseERC20(tournamentId, accounts[1].address)
+    ).to.be.rejectedWith("player has already joined");
   });
 
   it("the admin of a tournament should be able to cancel a tournament and it should refund every wallet with erc20", async function () {
@@ -178,6 +150,40 @@ describe("Tournament with a ERC20 token as subscription", function () {
     ).totalAccTokenReward;
     expect(totalAccRewardCancelled.toString()).to.be.equal(
       ethers.utils.parseEther("0").toString()
+    );
+  });
+
+  it("should be able to split payment and release with erc20 tokens", async () => {
+    const Tournament = await ethers.getContractFactory("TournamentManager");
+    tournamentManager = await Tournament.deploy();
+    const tx = await tournamentManager.createTournament(
+      ethers.utils.parseEther("10"),
+      eq9.address
+    );
+    const rc = await tx.wait(); // 0ms, as tx is already confirmed
+    const event = rc.events?.find(
+      (event: any) => event.event === "TournamentCreated"
+    );
+    tournamentId = event?.args?.id;
+
+    const payees = [];
+    const shares = [];
+
+    for (let i = 1; i < 5; i++) {
+      await eq9
+        .connect(accounts[i])
+        .approve(tournamentManager.address, ethers.utils.parseEther("10"));
+      await tournamentManager.connect(accounts[i]).joinERC20(tournamentId);
+      payees.push(accounts[i].address);
+      shares.push(ethers.utils.parseEther("10"));
+    }
+
+    await tournamentManager.splitPayment(tournamentId, payees, shares);
+
+    await tournamentManager.release(
+      tournamentId,
+      accounts[1].address,
+      ethers.utils.parseEther("10")
     );
   });
 });

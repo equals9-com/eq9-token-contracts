@@ -34,6 +34,7 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
         IERC20 token;
         uint256 totalShares;
         uint256 totalAccTokenReward;
+        uint256 sponsorTotalAcc;
         uint256 tokenFee;
         TournamentState state;
     }
@@ -138,6 +139,7 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
 
     function cancelTournament(uint256 _id) public payable onlyAdmin(_id) {
         Tournament storage tournament = tournaments[_id];
+        require(tournament.totalAccTokenReward > 0, "Tournament has already distributed all tokens");
         tournament.state = TournamentState.Ended;
         for (uint256 i = 0; i < players[_id].length; i++) {
             if (subscription[_id][players[_id][i].walletAddress] == 0) continue;
@@ -203,6 +205,7 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
         } else {
             tournament.token.safeTransfer(_sponsor, _amount);
             tournament.totalAccTokenReward -= _amount;
+            tournament.sponsorTotalAcc -= _amount;
             emit SubscriptionCancelled(
                 _id,
                 _sponsor,
@@ -332,28 +335,23 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
      * It is necessary to pay using the proper token fee otherwise the player won't be
      * registered as participant of the tournament.
      * @param _id the id of the tournament to join
-     * @param _amount the ERC20 token amount used to transfer to the contract
      */
     function joinSomeoneElseERC20(
         uint256 _id,
-        address _player,
-        uint256 _amount
+        address _player
     ) public payable nonReentrant onlyTokenERC20(_id) {
         Tournament storage tournament = tournaments[_id];
         require(
             tournament.state == TournamentState.Waiting,
             "tournament already started or ended"
         );
-        require(
-            _amount == tournament.tokenFee,
-            "amount inserted is not the required ticket price"
-        );
+        uint256 amount = tournament.tokenFee;
         require(subscription[_id][_player] == 0, "player has already joined");
-        subscription[_id][_player] = _amount;
-        tournament.totalAccTokenReward += _amount;
+        subscription[_id][_player] = amount;
+        tournament.totalAccTokenReward += amount;
         players[_id].push(Player(_player));
-        tournament.token.safeTransferFrom(msg.sender, address(this), _amount);
-        emit PlayerJoined(_id, _player, _amount, address(0));
+        tournament.token.safeTransferFrom(msg.sender, address(this), amount);
+        emit PlayerJoined(_id, _player, amount, address(0));
     }
 
     /**
@@ -375,6 +373,7 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
         );
 
         tournament.totalAccTokenReward += msg.value;
+        tournament.sponsorTotalAcc += msg.value;
         sponsors[_id].push(
             Sponsor({walletAddress: msg.sender, amount: msg.value})
         );
@@ -402,6 +401,7 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
 
         tournament.token.safeTransferFrom(msg.sender, address(this), _amount);
         tournament.totalAccTokenReward += _amount;
+        tournament.sponsorTotalAcc += _amount;
         sponsors[_id].push(
             Sponsor({walletAddress: msg.sender, amount: _amount})
         );
@@ -499,7 +499,7 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
         uint256 _id,
         address[] memory _payees,
         uint256[] memory _shares
-    ) public payable onlyAdmin(_id) {
+    ) public onlyAdmin(_id) {
         Tournament storage tournament = tournaments[_id];
         require(
             _payees.length == _shares.length,
@@ -510,10 +510,8 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
         for (uint256 i = 0; i < _payees.length; i++) {
             _addPayee(_id, _payees[i], _shares[i]);
         }
-        require(
-            tournament.totalShares <= tournament.totalAccTokenReward,
-            "mismatch between accumulated and distributed"
-        );
+
+        tournament.totalShares = 0;
     }
 
     /**
@@ -533,9 +531,12 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
             "PaymentSplitter: account is the zero address"
         );
         require(_shares > 0, "PaymentSplitter: shares are 0");
-
+        require(players[_id].length > 0, "No players joined the tournament");
+        require(tournament.totalAccTokenReward >= _shares, "Shares greater than accumulated token reward");
+        
         shares[_account] += _shares;
         tournament.totalShares += _shares;
+        tournament.totalAccTokenReward -= _shares;
         emit PayeeAdded(_account, _shares);
     }
 
@@ -545,16 +546,23 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
      * @param _account the receiver address of the shares
      * @param _amount the amount to be received
      */
-    function release(address payable _account, uint256 _amount)
-        public
-        nonReentrant
-    {
+    function release(
+        uint256 _id,
+        address payable _account,
+        uint256 _amount
+    ) public payable nonReentrant {
         require(shares[_account] > 0, "account has no shares");
         require(_amount <= shares[_account], "amount exceeds shares");
+        Tournament storage tournament = tournaments[_id];
 
         shares[_account] -= _amount;
 
-        Address.sendValue(_account, _amount);
+        if (tournament.token == IERC20(address(0))) {
+            Address.sendValue(_account, _amount);
+        } else {
+            tournament.token.safeTransfer(_account, _amount);
+        }
+
         emit PaymentReleased(_account, _amount);
     }
 

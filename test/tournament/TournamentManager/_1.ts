@@ -143,6 +143,7 @@ describe("Tournament with native token as subscription", async function () {
 
     for (let i = 1; i < 5; i++) {
       await tournamentManager.release(
+        id,
         accounts[i].address,
         await tournamentManager.shares(accounts[i].address)
       );
@@ -330,13 +331,19 @@ describe("Tournament with native token as subscription", async function () {
   });
 
   it("the admin of a tournament should be able to cancel a tournament and it should refund every wallet", async function () {
-    await ethers.getSigners();
-    await tournamentManager.cancelTournament("1");
+    await tournamentManager.cancelTournament(id);
 
     const totalAccRewardCancelled = (await tournamentManager.tournaments(id))
       .totalAccTokenReward;
+
     expect(totalAccRewardCancelled.toString()).to.be.equal(
       ethers.utils.parseEther("0").toString()
+    );
+  });
+
+  it("should not be able to cancel a tournament if totalAccTokenReward is zero", async function () {
+    await expect(tournamentManager.cancelTournament(id)).to.be.revertedWith(
+      "Tournament has already distributed all tokens"
     );
   });
 
@@ -389,5 +396,9 @@ describe("Tournament with native token as subscription", async function () {
     await expect(
       tournamentManager.createTournament("10", ethers.constants.AddressZero)
     ).to.be.revertedWith("Pausable: paused");
+  });
+
+  it("should allow the owner to unpause", async () => {
+    await tournamentManager.unpause();
   });
 });
