@@ -5,7 +5,7 @@ async function main() {
   const balance = await owner.getBalance();
   console.log("current balance", balance.toString());
 
-  const eq9Address = "0x7B4736f9C88c0A59310BfFD3F5d7462812aeC43B";
+  const eq9Address = "0x3963a400b42377376d6c3d92ddf2d6288d8ee0d6";
 
   const Staking = await ethers.getContractFactory("Staking");
   const staking = await Staking.deploy(eq9Address);

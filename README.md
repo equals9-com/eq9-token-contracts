@@ -19,6 +19,14 @@ https://polygonscan.com/token/0x3963a400b42377376d6c3d92ddf2d6288d8ee0d6#balance
 It is possible the check the timelock contracts in the token holders chart:
 https://polygonscan.com/token/tokenholderchart/0x3963a400b42377376d6c3d92ddf2d6288d8ee0d6
 
+
+### Staking contract
+
+The Staking contract address is `0xC5A3B0B59d4Ed2AB73B5f3fEf956525F9d5ee2e7` and it's also verified on polygonscan:
+
+https://polygonscan.com/address/0xC5A3B0B59d4Ed2AB73B5f3fEf956525F9d5ee2e7#code
+
+
 ## On polygon mumbai testnet
 
 We have a testnet token without timelocks for testing on polygon:
