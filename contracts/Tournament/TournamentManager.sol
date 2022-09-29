@@ -493,7 +493,6 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
         address[] memory _payees,
         uint256[] memory _shares
     ) public onlyAdmin(_id) {
-        Tournament storage tournament = tournaments[_id];
         require(
             _payees.length == _shares.length,
             "payees and shares length mismatch"
