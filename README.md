@@ -33,13 +33,13 @@ https://polygonscan.com/address/0xC5A3B0B59d4Ed2AB73B5f3fEf956525F9d5ee2e7#code
 
 ### Tournament manager contract
 
-The tournament manager contract address is `0x1D04657D4dC9f544A2BC3030011EA2b0f121C1Fc` and it's also verified on 
+The tournament manager contract address is `0xCC17F11d9B31E38c0162824efBB05A882140E743` and it's also verified on 
 polygonscan:
 
-https://polygonscan.com/address/0x1D04657D4dC9f544A2BC3030011EA2b0f121C1Fc
+https://polygonscan.com/address/0xCC17F11d9B31E38c0162824efBB05A882140E743
 
 
-## All contracts on polygon mumbai testnet from here
+## All contracts on mumbai testnet from here
 
 EQ9 token on mumbai testnet: `0x7B4736f9C88c0A59310BfFD3F5d7462812aeC43B`
 
