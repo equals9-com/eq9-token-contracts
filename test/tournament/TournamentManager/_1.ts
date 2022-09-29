@@ -85,12 +85,12 @@ describe("Tournament with native token as subscription", async function () {
     const accounts = await ethers.getSigners();
 
     await expect(
-      tournamentManager.connect(accounts[1]).setState(id, "2")
+      tournamentManager.connect(accounts[1]).setStartedState(id)
     ).to.be.revertedWith(
       "only the admin of this tournament can handle this function"
     );
 
-    await tournamentManager.connect(accounts[0]).setState(id, "1");
+    await tournamentManager.connect(accounts[0]).setStartedState(id);
 
     const currentState = (await tournamentManager.tournaments(id)).state;
     expect(currentState.toString()).to.be.equal("1");
@@ -330,6 +330,14 @@ describe("Tournament with native token as subscription", async function () {
     ).to.be.reverted;
   });
 
+  it("should be able to set waiting state giving its tournament id", async () => {
+    await tournamentManager.setWaitingState(id);
+  });
+
+  it("should be able to set started state giving its tournament id", async () => {
+    await tournamentManager.setStartedState(id);
+  });
+
   it("the admin of a tournament should be able to cancel a tournament and it should refund every wallet", async function () {
     await tournamentManager.cancelTournament(id);
 
@@ -343,7 +351,7 @@ describe("Tournament with native token as subscription", async function () {
 
   it("should not be able to cancel a tournament if totalAccTokenReward is zero", async function () {
     await expect(tournamentManager.cancelTournament(id)).to.be.revertedWith(
-      "Tournament has already distributed all tokens"
+      "Tournament has already ended"
     );
   });
 
@@ -351,28 +359,10 @@ describe("Tournament with native token as subscription", async function () {
     expect(await tournamentManager.version()).to.be.equal("1.5.0");
   });
 
-  it("should be able to set waiting state giving its tournament id", async () => {
-    await tournamentManager.setWaitingState(id);
-  });
-
   it("should not allow a non admin user to set waiting state giving its tournament id", async () => {
     const accounts = await ethers.getSigners();
     await expect(tournamentManager.connect(accounts[1]).setWaitingState(id)).to
       .be.reverted;
-  });
-
-  it("should be able to set end state giving its tournament id", async () => {
-    await tournamentManager.setEndedState(id);
-  });
-
-  it("should not allow a non admin user to set end state giving its tournament id", async () => {
-    const accounts = await ethers.getSigners();
-    await expect(tournamentManager.connect(accounts[1]).setEndedState(id)).to.be
-      .reverted;
-  });
-
-  it("should be able to set started state giving its tournament id", async () => {
-    await tournamentManager.setStartedState(id);
   });
 
   it("should not allow a non admin user to set started state giving its tournament id", async () => {

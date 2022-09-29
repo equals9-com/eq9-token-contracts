@@ -186,4 +186,17 @@ describe("Tournament with a ERC20 token as subscription", function () {
       ethers.utils.parseEther("10")
     );
   });
+
+  it("should fetch totalShares of tournament and it should match the totalShares", async () => {
+    const tournamentStruct = await tournamentManager.getTournamentStruct(
+      tournamentId
+    );
+
+    let extTotalShares = ethers.utils.parseEther("0");
+    for (let i = 1; i < 5; i++) {
+      extTotalShares = extTotalShares.add(ethers.utils.parseEther("10"));
+    }
+
+    expect(extTotalShares.eq(tournamentStruct.totalShares)).to.be.equal(true);
+  });
 });

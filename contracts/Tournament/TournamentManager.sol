@@ -139,7 +139,10 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
 
     function cancelTournament(uint256 _id) public payable onlyAdmin(_id) {
         Tournament storage tournament = tournaments[_id];
-        require(tournament.totalAccTokenReward > 0, "Tournament has already distributed all tokens");
+        require(
+            tournament.state != TournamentState.Ended,
+            "Tournament has already ended"
+        );
         tournament.state = TournamentState.Ended;
         for (uint256 i = 0; i < players[_id].length; i++) {
             if (subscription[_id][players[_id][i].walletAddress] == 0) continue;
@@ -336,10 +339,12 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
      * registered as participant of the tournament.
      * @param _id the id of the tournament to join
      */
-    function joinSomeoneElseERC20(
-        uint256 _id,
-        address _player
-    ) public payable nonReentrant onlyTokenERC20(_id) {
+    function joinSomeoneElseERC20(uint256 _id, address _player)
+        public
+        payable
+        nonReentrant
+        onlyTokenERC20(_id)
+    {
         Tournament storage tournament = tournaments[_id];
         require(
             tournament.state == TournamentState.Waiting,
@@ -414,22 +419,14 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
     }
 
     /**
-     * @notice only the creator of this tournament is allowed to set the state
-     * @param _id the id of the tournament to check state
-     * @param _state the state to be specified
-     */
-    function setState(uint256 _id, TournamentState _state)
-        public
-        onlyAdmin(_id)
-    {
-        tournaments[_id].state = _state;
-    }
-
-    /**
      * @notice Auxuliary function to avoid misusage of setState function
      * @param _id the id of the tournament
      */
-    function setWaitingState(uint256 _id) public onlyAdmin(_id) {
+    function setWaitingState(uint256 _id) external onlyAdmin(_id) {
+        require(
+            tournaments[_id].state != TournamentState.Ended,
+            "tournament already ended"
+        );
         tournaments[_id].state = TournamentState.Waiting;
     }
 
@@ -437,15 +434,11 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
      * @notice Auxuliary function to avoid misusage of setState function
      * @param _id the id of the tournament
      */
-    function setEndedState(uint256 _id) public onlyAdmin(_id) {
-        tournaments[_id].state = TournamentState.Ended;
-    }
-
-    /**
-     * @notice Auxuliary function to avoid misusage of setState function
-     * @param _id the id of the tournament
-     */
-    function setStartedState(uint256 _id) public onlyAdmin(_id) {
+    function setStartedState(uint256 _id) external onlyAdmin(_id) {
+        require(
+            tournaments[_id].state != TournamentState.Ended,
+            "tournament already ended"
+        );
         tournaments[_id].state = TournamentState.Started;
     }
 
@@ -511,7 +504,7 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
             _addPayee(_id, _payees[i], _shares[i]);
         }
 
-        tournament.totalShares = 0;
+        tournaments[_id].state = TournamentState.Ended;
     }
 
     /**
@@ -532,8 +525,11 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
         );
         require(_shares > 0, "PaymentSplitter: shares are 0");
         require(players[_id].length > 0, "No players joined the tournament");
-        require(tournament.totalAccTokenReward >= _shares, "Shares greater than accumulated token reward");
-        
+        require(
+            tournament.totalAccTokenReward >= _shares,
+            "Shares greater than accumulated token reward"
+        );
+
         shares[_account] += _shares;
         tournament.totalShares += _shares;
         tournament.totalAccTokenReward -= _shares;
@@ -571,6 +567,14 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
      */
     function getPlayersLength(uint256 _id) external view returns (uint256) {
         return players[_id].length;
+    }
+
+    function getTournamentStruct(uint256 _id)
+        external
+        view
+        returns (Tournament memory)
+    {
+        return tournaments[_id];
     }
 
     /**
