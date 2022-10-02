@@ -6,7 +6,7 @@ typechain
 
 
 scripts/revert_virtual/users_and_wallets.ts
-
+scripts/staking/stake_many/wallets.ts
 
 #Hardhat files
 cache
