@@ -462,6 +462,25 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
     }
 
     /**
+     * @notice The Admin fot the tournament can remove the player
+     * as long as the tournament hasn't started yet
+     * @param _id the id of the tournament to exit
+     */
+    function removePlayer(uint256 _id, address _player) public onlyAdmin(_id) {
+        Tournament storage tournament = tournaments[_id];
+        require(
+            subscription[_id][_player] == tournament.tokenFee,
+            "player must have paid the entire fee"
+        );
+        require(
+            tournament.state == TournamentState.Waiting,
+            "cannot exit if state is not waiting"
+        );
+        _cancelSubscription(_id, payable(_player));
+        emit PlayerExited(_id, _player);
+    }
+
+    /**
      * @dev axuilirary function to check if player has paid the ticket, hence
      * joined the tournament
      * @param _id the id of the tournament to check payment

@@ -198,6 +198,27 @@ describe("Tournament with native token as subscription", async function () {
     );
   });
 
+  it("admin should be able to remove a player", async function () {
+    const accounts = await ethers.getSigners();
+
+    await tournamentManager.removePlayer(id, accounts[2].address);
+
+    const paymentDone = await tournamentManager.checkPayment(
+      id,
+      accounts[2].address
+    );
+
+    expect(paymentDone).to.be.equal(false);
+
+    const balance = await tournamentManager.provider.getBalance(
+      tournamentManager.address
+    );
+
+    expect(balance.toString()).to.be.equal(
+      ethers.utils.parseEther("120").toString()
+    );
+  });
+
   it("should not be able to join a tournament if the state is diferent from waiting", async () => {
     await tournamentManager.setStartedState(id);
     const accounts = await ethers.getSigners();
@@ -240,15 +261,18 @@ describe("Tournament with native token as subscription", async function () {
     const balance = await tournamentManager.provider.getBalance(
       tournamentManager.address
     );
+
+    // 120 because there was a removed player from the admin
     expect(balance.toString()).to.be.equal(
-      ethers.utils.parseEther("130").toString()
+      ethers.utils.parseEther("120").toString()
     );
 
     const totalAccReward2 = (await tournamentManager.tournaments(id))
       .totalAccTokenReward;
 
+    // 80 because there was a removed player from the admin
     expect(totalAccReward2.toString()).to.be.equal(
-      ethers.utils.parseEther("90").toString()
+      ethers.utils.parseEther("80").toString()
     );
   });
 
