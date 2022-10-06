@@ -1,7 +1,7 @@
 import { run } from "hardhat";
 
 async function main() {
-  const TournamentManagerAddress = "0xF56C732429f09C134386BfFD25aF57d2eF8816C0";
+  const TournamentManagerAddress = "0xcF4CFA5E18A99427237E88490B6539b81668C49A";
 
   try {
     await run("verify:verify", {
