@@ -22,7 +22,7 @@ async function main() {
   console.log("token fee", res.tokenFee.toString());
   // await eq9.approve(TournamentManagerAddress, res.tokenFee);
 
-  await tmInstance.joinERC20("0");
+  // await tmInstance.joinERC20("0");
 }
 
 // We recommend this pattern to be able to use async/await everywhere

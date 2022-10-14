@@ -55,10 +55,12 @@ https://mumbai.polygonscan.com/address/0x437070cAf868604bE93613627f99a655586EE7C
 
 ### TournamentManager contract
 
-The tournament manager contract address is `0xF56C732429f09C134386BfFD25aF57d2eF8816C0` and it's also verified on 
+The tournament manager contract address is `0xa938AF9d64b6DeE5d79BCAC8ad1cB12DD2D6c360
+` and it's also verified on 
 mumbai scan:
 
-https://mumbai.polygonscan.com/address/0xF56C732429f09C134386BfFD25aF57d2eF8816C0
+https://mumbai.polygonscan.com/address/0xa938AF9d64b6DeE5d79BCAC8ad1cB12DD2D6c360
+
 
 
 
