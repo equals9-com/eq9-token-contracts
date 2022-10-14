@@ -31,7 +31,7 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
 
     struct Tournament {
         address admin;
-        IERC20 token;
+        address token;
         uint256 totalShares;
         uint256 totalAccTokenReward;
         uint256 sponsorTotalAcc;
@@ -53,6 +53,8 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
 
     // to make it easier to redeem, shares will be not related to specific tournaments instatiated
     mapping(address => uint256) public shares;
+
+    mapping(address => mapping(address => uint256)) public sharesERC20;
 
     using Counters for Counters.Counter;
     using SafeERC20 for IERC20;
@@ -79,7 +81,9 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
     );
     event TournamentCanceled(uint256 indexed id);
     event PayeeAdded(address account, uint256 shares);
+    event PayeeAddedERC20(address token, address account, uint256 shares);
     event PaymentReleased(address to, uint256 amount);
+    event PaymentReleasedERC20(address token, address to, uint256 amount);
     event PaymentReceived(address from, uint256 amount);
     event prizeIncreased(
         uint256 indexed id,
@@ -122,9 +126,7 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
         newTournament.admin = msg.sender;
         newTournament.state = TournamentState.Waiting;
         newTournament.tokenFee = _fee;
-        newTournament.token = _token == address(0)
-            ? IERC20(address(0))
-            : IERC20(_token);
+        newTournament.token = _token == address(0) ? address(0) : _token;
         tournaments[currentId] = newTournament;
         id.increment();
         emit TournamentCreated(currentId);
@@ -174,11 +176,11 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
         subscription[_id][_subscriber] = 0;
         tournament.totalAccTokenReward -= refund;
 
-        if (tournament.token == IERC20(address(0))) {
+        if (tournament.token == address(0)) {
             Address.sendValue(_subscriber, refund);
             emit SubscriptionCancelled(_id, _subscriber, refund, address(0));
         } else {
-            tournament.token.safeTransfer(_subscriber, refund);
+            IERC20(tournament.token).safeTransfer(_subscriber, refund);
             emit SubscriptionCancelled(
                 _id,
                 _subscriber,
@@ -201,12 +203,12 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
         uint256 _amount
     ) private nonReentrant {
         Tournament storage tournament = tournaments[_id];
-        if (tournament.token == IERC20(address(0))) {
+        if (tournament.token == address(0)) {
             Address.sendValue(_sponsor, _amount);
             tournament.totalAccTokenReward -= _amount;
             emit SubscriptionCancelled(_id, _sponsor, _amount, address(0));
         } else {
-            tournament.token.safeTransfer(_sponsor, _amount);
+            IERC20(tournament.token).safeTransfer(_sponsor, _amount);
             tournament.totalAccTokenReward -= _amount;
             tournament.sponsorTotalAcc -= _amount;
             emit SubscriptionCancelled(
@@ -233,7 +235,7 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
 
     modifier onlyTokenERC20(uint256 _id) {
         require(
-            tournaments[_id].token != IERC20(address(0)),
+            tournaments[_id].token != address(0),
             "only avaible if theres a token ERC20 specified for this tournament"
         );
         _;
@@ -241,7 +243,7 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
 
     modifier onlyNetworkToken(uint256 _id) {
         require(
-            tournaments[_id].token == IERC20(address(0)),
+            tournaments[_id].token == address(0),
             "only avaible if theres no token ERC20 specified for this tournament"
         );
         _;
@@ -300,7 +302,11 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
         uint256 _amount = tournament.tokenFee;
         subscription[_id][msg.sender] = _amount;
         tournament.totalAccTokenReward += _amount;
-        tournament.token.safeTransferFrom(msg.sender, address(this), _amount);
+        IERC20(tournament.token).safeTransferFrom(
+            msg.sender,
+            address(this),
+            _amount
+        );
         players[_id].push(Player(msg.sender));
         emit PlayerJoined(_id, msg.sender, _amount, address(tournament.token));
     }
@@ -355,7 +361,11 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
         subscription[_id][_player] = amount;
         tournament.totalAccTokenReward += amount;
         players[_id].push(Player(_player));
-        tournament.token.safeTransferFrom(msg.sender, address(this), amount);
+        IERC20(tournament.token).safeTransferFrom(
+            msg.sender,
+            address(this),
+            amount
+        );
         emit PlayerJoined(_id, _player, amount, address(0));
     }
 
@@ -404,7 +414,11 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
             "tournament already started or ended"
         );
 
-        tournament.token.safeTransferFrom(msg.sender, address(this), _amount);
+        IERC20(tournament.token).safeTransferFrom(
+            msg.sender,
+            address(this),
+            _amount
+        );
         tournament.totalAccTokenReward += _amount;
         tournament.sponsorTotalAcc += _amount;
         sponsors[_id].push(
@@ -547,11 +561,17 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
             tournament.totalAccTokenReward >= _shares,
             "Shares greater than accumulated token reward"
         );
-
-        shares[_account] += _shares;
-        tournament.totalShares += _shares;
-        tournament.totalAccTokenReward -= _shares;
-        emit PayeeAdded(_account, _shares);
+        if (tournament.token == address(0)) {
+            shares[_account] += _shares;
+            tournament.totalShares += _shares;
+            tournament.totalAccTokenReward -= _shares;
+            emit PayeeAdded(_account, _shares);
+        } else {
+            sharesERC20[tournament.token][_account] += _shares;
+            tournament.totalShares += _shares;
+            tournament.totalAccTokenReward -= _shares;
+            emit PayeeAddedERC20(tournament.token, _account, _shares);
+        }
     }
 
     /**
@@ -567,17 +587,35 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
     ) public payable nonReentrant {
         require(shares[_account] > 0, "account has no shares");
         require(_amount <= shares[_account], "amount exceeds shares");
-        Tournament storage tournament = tournaments[_id];
 
         shares[_account] -= _amount;
 
-        if (tournament.token == IERC20(address(0))) {
-            Address.sendValue(_account, _amount);
-        } else {
-            tournament.token.safeTransfer(_account, _amount);
-        }
+        Address.sendValue(_account, _amount);
 
         emit PaymentReleased(_account, _amount);
+    }
+
+    /**
+     * @dev Triggers a transfer to `account` of the amount of ERC20 token they are owed, according to their
+     * balance of shares
+     * @param _account the receiver address of the shares
+     * @param _amount the amount to be received
+     */
+    function releaseERC20(
+        address _token,
+        address payable _account,
+        uint256 _amount
+    ) public payable nonReentrant {
+        require(sharesERC20[_token][_account] > 0, "account has no shares");
+        require(
+            _amount <= sharesERC20[_token][_account],
+            "amount exceeds shares"
+        );
+        sharesERC20[_token][_account] -= _amount;
+
+        IERC20(_token).transfer(_account, _amount);
+
+        emit PaymentReleasedERC20(_token, _account, _amount);
     }
 
     /**

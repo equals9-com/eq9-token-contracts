@@ -28,13 +28,18 @@ const config: HardhatUserConfig = {
     ],
   },
   networks: {
+    hardhat: {
+      allowUnlimitedContractSize: true,
+    },
     polygon: {
       url: String(POLYGON_RPC_URL),
       accounts: [String(PRIVATE_KEY)],
+      allowUnlimitedContractSize: true,
     },
     mumbai: {
       url: String(MUMBAI_RPC_URL),
       accounts: [String(PRIVATE_KEY)],
+      allowUnlimitedContractSize: true,
     },
   },
   etherscan: {
