@@ -581,7 +581,6 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
      * @param _amount the amount to be received
      */
     function release(
-        uint256 _id,
         address payable _account,
         uint256 _amount
     ) public payable nonReentrant {
