@@ -45,7 +45,9 @@ describe("Tournament with a ERC20 token as subscription", function () {
         .connect(accounts[i])
         .approve(tournamentManager.address, ethers.utils.parseEther("10"));
 
-      await tournamentManager.connect(accounts[i]).joinERC20(tournamentId);
+      await tournamentManager
+        .connect(accounts[i])
+        .joinERC20(tournamentId, accounts[i].address);
     }
 
     expect(await tournamentManager.getPlayersLength(tournamentId)).to.be.equal(
@@ -57,7 +59,9 @@ describe("Tournament with a ERC20 token as subscription", function () {
     await tournamentManager.setStartedState(tournamentId);
 
     await expect(
-      tournamentManager.connect(accounts[9]).joinERC20(tournamentId)
+      tournamentManager
+        .connect(accounts[9])
+        .joinERC20(tournamentId, accounts[9].address)
     ).to.be.rejectedWith("tournament not waiting");
 
     await tournamentManager.setWaitingState(tournamentId);
@@ -68,10 +72,14 @@ describe("Tournament with a ERC20 token as subscription", function () {
       .connect(accounts[9])
       .approve(tournamentManager.address, ethers.utils.parseEther("10"));
 
-    await tournamentManager.connect(accounts[9]).joinERC20(tournamentId);
+    await tournamentManager
+      .connect(accounts[9])
+      .joinERC20(tournamentId, accounts[9].address);
 
     await expect(
-      tournamentManager.connect(accounts[9]).joinERC20(tournamentId)
+      tournamentManager
+        .connect(accounts[9])
+        .joinERC20(tournamentId, accounts[9].address)
     ).to.be.rejectedWith("player has already joined");
   });
 
@@ -110,7 +118,9 @@ describe("Tournament with a ERC20 token as subscription", function () {
     await expect(
       tournamentManager
         .connect(accounts[17])
-        .join(tournamentId, { value: ethers.utils.parseEther("10") })
+        .join(tournamentId, accounts[17].address, {
+          value: ethers.utils.parseEther("10"),
+        })
     ).to.be.rejectedWith(
       "only avaible if theres no token ERC20 specified for this tournament"
     );
@@ -123,22 +133,22 @@ describe("Tournament with a ERC20 token as subscription", function () {
 
     await tournamentManager
       .connect(accounts[18])
-      .joinSomeoneElseERC20(tournamentId, accounts[19].address);
+      .joinERC20(tournamentId, accounts[19].address);
   });
 
   it("should not be able to allow a user to pay for someone else to join if tournament state is not waiting for ERC20", async () => {
     await tournamentManager.setStartedState(tournamentId);
 
     await expect(
-      tournamentManager.joinSomeoneElseERC20(tournamentId, accounts[15].address)
-    ).to.be.rejectedWith("tournament already started or ended");
+      tournamentManager.joinERC20(tournamentId, accounts[15].address)
+    ).to.be.rejectedWith("tournament not waiting");
 
     await tournamentManager.setWaitingState(tournamentId);
   });
 
   it("should not be able to allow a user to pay for someone else to join if the user is already joined", async () => {
     await expect(
-      tournamentManager.joinSomeoneElseERC20(tournamentId, accounts[1].address)
+      tournamentManager.joinERC20(tournamentId, accounts[1].address)
     ).to.be.rejectedWith("player has already joined");
   });
 
@@ -173,7 +183,9 @@ describe("Tournament with a ERC20 token as subscription", function () {
       await eq9
         .connect(accounts[i])
         .approve(tournamentManager.address, ethers.utils.parseEther("10"));
-      await tournamentManager.connect(accounts[i]).joinERC20(tournamentId);
+      await tournamentManager
+        .connect(accounts[i])
+        .joinERC20(tournamentId, accounts[i].address);
       payees.push(accounts[i].address);
       shares.push(ethers.utils.parseEther("10"));
     }

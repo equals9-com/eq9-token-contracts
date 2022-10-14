@@ -42,7 +42,7 @@ describe("Tournament with a prize added and free subscription ", async function 
     for (let i = 1; i < 10; i++) {
       await tournamentManager
         .connect(accounts[i])
-        .join(id, { value: ethers.utils.parseEther("0") });
+        .join(id, accounts[i].address, { value: ethers.utils.parseEther("0") });
     }
     const balance = await tournamentManager.provider.getBalance(
       tournamentManager.address

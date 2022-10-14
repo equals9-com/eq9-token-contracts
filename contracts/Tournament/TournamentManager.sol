@@ -249,75 +249,15 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
         _;
     }
 
+
     /**
-     * @notice use this function to join the tournment.
+     * @notice use this function to pay for the subscription fee in Ether. It can be 
+     * used to join someone else other than the msg.sender too.  
      * It is necessary to pay the native token fee otherwise the player won't be
      * registered as participant of the tournament.
      * @param _id the id of the tournament to join
      */
-    function join(uint256 _id)
-        public
-        payable
-        nonReentrant
-        onlyNetworkToken(_id)
-    {
-        Tournament storage tournament = tournaments[_id];
-        require(
-            tournament.state == TournamentState.Waiting,
-            "tournament already started or ended"
-        );
-        require(
-            msg.value == tournament.tokenFee,
-            "amount inserted is not the required ticket price"
-        );
-        require(
-            subscription[_id][msg.sender] == 0,
-            "player has already joined"
-        );
-
-        subscription[_id][msg.sender] = msg.value;
-        tournament.totalAccTokenReward += msg.value;
-        players[_id].push(Player(msg.sender));
-        emit PlayerJoined(_id, msg.sender, msg.value, address(0));
-    }
-
-    /**
-     * @notice use this function to join the tournment.
-     * It is necessary to pay the native token fee otherwise the player won't be
-     * registered as participant of the tournament.
-     * @param _id the id of the tournament to join
-     */
-
-    function joinERC20(uint256 _id) public nonReentrant onlyTokenERC20(_id) {
-        Tournament storage tournament = tournaments[_id];
-        require(
-            tournament.state == TournamentState.Waiting,
-            "tournament not waiting"
-        );
-        require(
-            subscription[_id][msg.sender] == 0,
-            "player has already joined"
-        );
-
-        uint256 _amount = tournament.tokenFee;
-        subscription[_id][msg.sender] = _amount;
-        tournament.totalAccTokenReward += _amount;
-        IERC20(tournament.token).safeTransferFrom(
-            msg.sender,
-            address(this),
-            _amount
-        );
-        players[_id].push(Player(msg.sender));
-        emit PlayerJoined(_id, msg.sender, _amount, address(tournament.token));
-    }
-
-    /**
-     * @notice use this function to pay for the subscription of someone else
-     * It is necessary to pay the native token fee otherwise the player won't be
-     * registered as participant of the tournament.
-     * @param _id the id of the tournament to join
-     */
-    function joinSomeoneElse(uint256 _id, address _player)
+    function join(uint256 _id, address _player)
         public
         payable
         nonReentrant
@@ -340,12 +280,13 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
     }
 
     /**
-     * @notice use this function to pay for the subscription of someone else
+     * @notice use this function to pay for the subscription to join the torunament. It 
+     * can be used to also join someone else than the msg.sender
      * It is necessary to pay using the proper token fee otherwise the player won't be
      * registered as participant of the tournament.
      * @param _id the id of the tournament to join
      */
-    function joinSomeoneElseERC20(uint256 _id, address _player)
+    function joinERC20(uint256 _id, address _player)
         public
         payable
         nonReentrant
@@ -354,7 +295,7 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
         Tournament storage tournament = tournaments[_id];
         require(
             tournament.state == TournamentState.Waiting,
-            "tournament already started or ended"
+            "tournament not waiting"
         );
         uint256 amount = tournament.tokenFee;
         require(subscription[_id][_player] == 0, "player has already joined");

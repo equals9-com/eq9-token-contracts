@@ -41,7 +41,9 @@ describe("Tournament with native token as subscription", async function () {
     for (let i = 1; i < 10; i++) {
       await tournamentManager
         .connect(accounts[i])
-        .join(id, { value: ethers.utils.parseEther("10") });
+        .join(id, accounts[i].address, {
+          value: ethers.utils.parseEther("10"),
+        });
     }
     const balance = await tournamentManager.provider.getBalance(
       tournamentManager.address
@@ -62,7 +64,7 @@ describe("Tournament with native token as subscription", async function () {
     await expect(
       tournamentManager
         .connect(accounts[11])
-        .join(id, { value: ethers.utils.parseEther("9") })
+        .join(id, accounts[11].address, { value: ethers.utils.parseEther("9") })
     ).to.be.revertedWith("amount inserted is not the required ticket price");
   });
 
@@ -178,7 +180,9 @@ describe("Tournament with native token as subscription", async function () {
     for (let i = 1; i < 10; i++) {
       await tournamentManager
         .connect(accounts[i])
-        .join(id, { value: ethers.utils.parseEther("10") });
+        .join(id, accounts[i].address, {
+          value: ethers.utils.parseEther("10"),
+        });
     }
     const balance = await tournamentManager.provider.getBalance(
       tournamentManager.address
@@ -225,7 +229,7 @@ describe("Tournament with native token as subscription", async function () {
     await expect(
       tournamentManager
         .connect(accounts[19])
-        .join(id, { value: ethers.utils.parseEther("10") })
+        .join(id, accounts[0].address, { value: ethers.utils.parseEther("10") })
     ).to.be.reverted;
 
     await tournamentManager.setWaitingState(id);
@@ -236,20 +240,23 @@ describe("Tournament with native token as subscription", async function () {
 
     await tournamentManager
       .connect(accounts[19])
-      .join(id, { value: ethers.utils.parseEther("10") });
+      .join(id, accounts[19].address, { value: ethers.utils.parseEther("10") });
 
     await expect(
-      tournamentManager
-        .connect(accounts[19])
-        .join(id, { value: ethers.utils.parseEther("10") })
+      tournamentManager.connect(accounts[19]).join(id, accounts[19].address, {
+        value: ethers.utils.parseEther("10"),
+      })
     ).to.be.reverted;
   });
 
   it("should not be able to join with erc20 token if a tournament is already using network token", async () => {
     const accounts = await ethers.getSigners();
 
-    await expect(tournamentManager.connect(accounts[19]).joinERC20(id)).to.be
-      .reverted;
+    await expect(
+      tournamentManager
+        .connect(accounts[19])
+        .joinERC20(id, accounts[19].address)
+    ).to.be.reverted;
   });
 
   it("Some of the joined players should exit", async function () {
@@ -310,7 +317,7 @@ describe("Tournament with native token as subscription", async function () {
   it("should be able to allow a user to pay for someone else to join", async () => {
     const accounts = await ethers.getSigners();
 
-    await tournamentManager.joinSomeoneElse(id, accounts[18].address, {
+    await tournamentManager.join(id, accounts[18].address, {
       value: ethers.utils.parseEther("10"),
     });
   });
@@ -321,7 +328,7 @@ describe("Tournament with native token as subscription", async function () {
     const accounts = await ethers.getSigners();
 
     await expect(
-      tournamentManager.joinSomeoneElse(id, accounts[18].address, {
+      tournamentManager.join(id, accounts[18].address, {
         value: ethers.utils.parseEther("10"),
       })
     ).to.be.reverted;
@@ -333,7 +340,7 @@ describe("Tournament with native token as subscription", async function () {
     const accounts = await ethers.getSigners();
 
     await expect(
-      tournamentManager.joinSomeoneElse(id, accounts[18].address, {
+      tournamentManager.join(id, accounts[18].address, {
         value: ethers.utils.parseEther("9"),
       })
     ).to.be.reverted;
@@ -342,12 +349,12 @@ describe("Tournament with native token as subscription", async function () {
   it("should not be able to allow a user to pay for someone else to join if the user is already joined", async () => {
     const accounts = await ethers.getSigners();
 
-    await tournamentManager
-      .connect(accounts[1])
-      .join(id, { value: ethers.utils.parseEther("10") });
+    await tournamentManager.join(id, accounts[1].address, {
+      value: ethers.utils.parseEther("10"),
+    });
 
     await expect(
-      tournamentManager.joinSomeoneElse(id, accounts[1].address, {
+      tournamentManager.join(id, accounts[1].address, {
         value: ethers.utils.parseEther("10"),
       })
     ).to.be.reverted;
