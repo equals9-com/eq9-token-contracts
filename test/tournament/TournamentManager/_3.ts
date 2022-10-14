@@ -180,11 +180,15 @@ describe("Tournament with a ERC20 token as subscription", function () {
 
     await tournamentManager.splitPayment(tournamentId, payees, shares);
 
-    await tournamentManager.release(
-      tournamentId,
+    const balanceBefore = await eq9.balanceOf(accounts[1].address);
+    await tournamentManager.releaseERC20(
+      eq9.address,
       accounts[1].address,
       ethers.utils.parseEther("10")
     );
+    const balanceAfter = await eq9.balanceOf(accounts[1].address);
+    expect(balanceAfter.eq(balanceBefore.add(ethers.utils.parseEther("10")))).to
+      .be.true;
   });
 
   it("should fetch totalShares of tournament and it should match the totalShares", async () => {
