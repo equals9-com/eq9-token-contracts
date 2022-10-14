@@ -33,10 +33,10 @@ https://polygonscan.com/address/0xC5A3B0B59d4Ed2AB73B5f3fEf956525F9d5ee2e7#code
 
 ### Tournament manager contract
 
-The tournament manager contract address is `0xcF4CFA5E18A99427237E88490B6539b81668C49A` and it's also verified on 
+The tournament manager contract address is `0x59a3aB823c63268CBfDD13476031a47E07f179e7` and it's also verified on 
 polygonscan:
 
-https://polygonscan.com/address/0xcF4CFA5E18A99427237E88490B6539b81668C49A
+https://polygonscan.com/address/0x59a3aB823c63268CBfDD13476031a47E07f179e7
 
 
 ## All contracts on mumbai testnet from here
