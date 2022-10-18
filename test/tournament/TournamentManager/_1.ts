@@ -222,6 +222,13 @@ describe("Tournament with native token as subscription", async function () {
     );
   });
 
+  it("should not be able to exit a player if he already exited.", async () => {
+    const accounts = await ethers.getSigners();
+    await expect(
+      tournamentManager.removePlayer(id, accounts[2].address)
+    ).to.be.revertedWith("player must have paid the entire fee");
+  });
+
   it("should not be able to join a tournament if the state is diferent from waiting", async () => {
     await tournamentManager.setStartedState(id);
     const accounts = await ethers.getSigners();
@@ -368,6 +375,13 @@ describe("Tournament with native token as subscription", async function () {
     await tournamentManager.setStartedState(id);
   });
 
+  it("should not be able to exit a player if its not WAITING state", async () => {
+    const accounts = await ethers.getSigners();
+    await expect(
+      tournamentManager.removePlayer(id, accounts[9].address)
+    ).to.be.revertedWith("cannot exit if state is not waiting");
+  });
+
   it("the admin of a tournament should be able to cancel a tournament and it should refund every wallet", async function () {
     await tournamentManager.cancelTournament(id);
 
@@ -420,5 +434,21 @@ describe("Tournament with native token as subscription", async function () {
 
   it("should allow the owner to unpause", async () => {
     await tournamentManager.unpause();
+  });
+
+  // NOTE the tournament must be in a ENDED state in order to this test to pass
+  it("should not allow tournament to be STARTED if its state is already ENDED", async () => {
+    // await tournamentManager.cancelTournament(id);
+
+    await expect(tournamentManager.setStartedState(id)).to.be.rejectedWith(
+      "tournament already ended"
+    );
+  });
+
+  // NOTE the tournament must be in a ENDED state in order to this test to pass
+  it("should not allow tournament to be WAITING if its state is already ENDED", async () => {
+    await expect(tournamentManager.setWaitingState(id)).to.be.rejectedWith(
+      "tournament already ended"
+    );
   });
 });
