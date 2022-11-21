@@ -153,7 +153,7 @@ describe("Tournament with a ERC20 token as subscription", function () {
   });
 
   it("the admin of a tournament should be able to cancel a tournament and it should refund every wallet with erc20", async function () {
-    await tournamentManager.connect(accounts[0]).cancelTournament("0");
+    await tournamentManager.connect(accounts[0]).cancelTournament(tournamentId);
 
     const totalAccRewardCancelled = (
       await tournamentManager.tournaments(tournamentId)
@@ -203,6 +203,16 @@ describe("Tournament with a ERC20 token as subscription", function () {
       .be.true;
   });
 
+  it("should not be able to release from an account if it has no shares", async () => {
+    await expect(
+      tournamentManager.releaseERC20(
+        eq9.address,
+        accounts[1].address,
+        ethers.utils.parseEther("10")
+      )
+    ).to.be.revertedWith("account has no shares");
+  });
+
   it("should fetch totalShares of tournament and it should match the totalShares", async () => {
     const tournamentStruct = await tournamentManager.getTournamentStruct(
       tournamentId
@@ -214,5 +224,42 @@ describe("Tournament with a ERC20 token as subscription", function () {
     }
 
     expect(extTotalShares.eq(tournamentStruct.totalShares)).to.be.equal(true);
+  });
+
+  it("should not be able to release from an account if amount exceeds the shares", async () => {
+    const Tournament = await ethers.getContractFactory("TournamentManager");
+    tournamentManager = await Tournament.deploy();
+    const tx = await tournamentManager.createTournament(
+      ethers.utils.parseEther("10"),
+      eq9.address
+    );
+    const rc = await tx.wait(); // 0ms, as tx is already confirmed
+    const event = rc.events?.find(
+      (event: any) => event.event === "TournamentCreated"
+    );
+    tournamentId = event?.args?.id;
+
+    await eq9
+      .connect(accounts[9])
+      .approve(tournamentManager.address, ethers.utils.parseEther("10"));
+    await tournamentManager
+      .connect(accounts[9])
+      .joinERC20(tournamentId, accounts[9].address);
+
+    const payees = [];
+    const shares = [];
+
+    payees.push(accounts[9].address);
+    shares.push(ethers.utils.parseEther("10"));
+
+    await tournamentManager.splitPayment(tournamentId, payees, shares);
+
+    await expect(
+      tournamentManager.releaseERC20(
+        eq9.address,
+        accounts[9].address,
+        ethers.utils.parseEther("100")
+      )
+    ).to.be.revertedWith("amount exceeds shares");
   });
 });
