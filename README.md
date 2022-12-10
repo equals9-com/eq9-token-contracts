@@ -6,13 +6,6 @@ the eq9 token.
 
 # deployed contracts addresses
 
-## On Harmony mainnet before network change (LEGACY)
-
-The contract is deployed in the following addres: `0x598228643d6faa1b5569c3d996cb8cf8ca1fdb92`
-on the harmony mainnet network.
-
-You can check it on the explorer: https://explorer.harmony.one/address/0x598228643d6faa1b5569c3d996cb8cf8ca1fdb92
-
 
 ## Contracts on Polygon mainnet after the network change
 
@@ -182,3 +175,10 @@ Last distribution : 01 - 12 - 2025
 More details here: https://equals9.com/documents/TOKENOMICS_ENGLISH.pdf
 
 
+
+## On Harmony mainnet before network change (LEGACY)
+
+The contract is deployed in the following addres: `0x598228643d6faa1b5569c3d996cb8cf8ca1fdb92`
+on the harmony mainnet network.
+
+You can check it on the explorer: https://explorer.harmony.one/address/0x598228643d6faa1b5569c3d996cb8cf8ca1fdb92
