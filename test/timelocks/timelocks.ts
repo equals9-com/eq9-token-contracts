@@ -1,7 +1,7 @@
 import { ethers } from "hardhat";
-import { EQ9, TokenMultiTimelock } from "../types";
+import { EQ9, TokenMultiTimelock } from "../../types";
 import { expect } from "chai";
-import { timelockConfigs } from "../config/timelockConfig";
+import { timelockConfigs } from "../../config/timelockConfig";
 import { mine } from "@nomicfoundation/hardhat-network-helpers";
 
 const getUnixTime = (date: Date): number => {

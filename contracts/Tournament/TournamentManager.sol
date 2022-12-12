@@ -249,10 +249,9 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
         _;
     }
 
-
     /**
-     * @notice use this function to pay for the subscription fee in Ether. It can be 
-     * used to join someone else other than the msg.sender too.  
+     * @notice use this function to pay for the subscription fee in Ether. It can be
+     * used to join someone else other than the msg.sender too.
      * It is necessary to pay the native token fee otherwise the player won't be
      * registered as participant of the tournament.
      * @param _id the id of the tournament to join
@@ -280,7 +279,7 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
     }
 
     /**
-     * @notice use this function to pay for the subscription to join the torunament. It 
+     * @notice use this function to pay for the subscription to join the torunament. It
      * can be used to also join someone else than the msg.sender
      * It is necessary to pay using the proper token fee otherwise the player won't be
      * registered as participant of the tournament.
@@ -521,10 +520,11 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
      * @param _account the receiver address of the shares
      * @param _amount the amount to be received
      */
-    function release(
-        address payable _account,
-        uint256 _amount
-    ) public payable nonReentrant {
+    function release(address payable _account, uint256 _amount)
+        public
+        payable
+        nonReentrant
+    {
         require(shares[_account] > 0, "account has no shares");
         require(_amount <= shares[_account], "amount exceeds shares");
 
