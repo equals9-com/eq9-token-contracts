@@ -15,7 +15,7 @@ const getUnixTime = (date: Date): number => {
   return Math.floor(date.getTime() / 1000);
 };
 
-describe("timelocks", function () {
+describe("timelocks personal 3", function () {
   let eq9: EQ9;
   let timelock: TokenMultiTimelock;
 

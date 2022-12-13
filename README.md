@@ -61,7 +61,7 @@ https://mumbai.polygonscan.com/address/0xa938AF9d64b6DeE5d79BCAC8ad1cB12DD2D6c36
 
 The test file included only tests the custom stake functionality. All other functionalities are standard OpenZeppelin ERC20. 
 
-Tests can be run with `npx hardhat test`.
+Tests can be run with `npx hardhat test  --parallel`.
 
 
 ## Fixes from the audit

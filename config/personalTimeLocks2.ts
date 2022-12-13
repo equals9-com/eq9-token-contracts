@@ -4,7 +4,7 @@
 export const totalLocked = "5000000";
 export const monthlyRelease = "1000000";
 export const contractName = "Private Investor: F.A.C";
-export const beneficiary = ""; // beneficiary missing
+export const beneficiary = "0x64E53b428d3b109cf0Cf59D1BaD79e43777B1C76"; // beneficiary missing
 export const dates = [
   new Date("01/09/2023"),
   new Date("02/09/2023"),
