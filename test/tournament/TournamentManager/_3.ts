@@ -9,7 +9,7 @@ describe("Tournament with a ERC20 token as subscription", function () {
   let tournamentId: string;
   let accounts: SignerWithAddress[];
 
-  it("should create an tournament with a generic rc20 token", async function () {
+  it("should create an tournament with a generic erc20 token", async function () {
     accounts = await ethers.getSigners();
     const owner = accounts[0];
 
