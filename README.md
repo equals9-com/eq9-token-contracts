@@ -7,7 +7,7 @@ the eq9 token.
 # deployed contracts addresses
 
 
-## Contracts on Polygon mainnet after the network change
+## Contracts on Polygon mainnet
 
 EQ9 address on polygon mainnet: `0x3963a400b42377376d6c3d92ddf2d6288d8ee0d6`
 
@@ -129,7 +129,9 @@ Monthly release: 10.178.660 EQ9
 (27 times)
 First distribution: 01 - 10 - 2023
 
-Last distribution : 01 - 12 - 202:
+Last distribution : 01 - 12 - 2024:
+
+timelock address: https://polygonscan.com/address/0x90e49f5ffce602ec7aefd7471cc307fd2c901061
 
 
 Harvesting: 
@@ -141,8 +143,11 @@ First distribution: 01 - 01 - 2023
 
 Last distribution : 01 - 03 - 2025:IDO/IEOs: 
 
+timelock address: https://polygonscan.com/address/0xaa6376064c8351c961077b9d4d1aa6365e71c99f
 
 
+
+IEO/IDO
 
 Total Locked: 136.680.000 EQ9
 Monthly release: 11.400.000 EQ9
@@ -151,6 +156,7 @@ First distribution: 01 - 01 - 2023
 
 Last distribution : 01 - 12 - 2023:
 
+timelock address: https://polygonscan.com/address/0x28c1a012a5c6de345f6eac4bc41f31473aac1a26  
 
 Marketing&Partnership: 
 
@@ -161,6 +167,7 @@ First distribution: 01 - 01 - 2023
 
 Last distribution : 01 - 09 - 202:
 
+timelock address: https://polygonscan.com/address/0x6860e99e12106973d55308ac967f9b1554750ebc
 
 Social Projects: 
 
@@ -169,6 +176,8 @@ Monthly release: 12.500.000 EQ9
 (36 times)
 First distribution: 01 - 01 - 2023
 Last distribution : 01 - 12 - 2025
+
+timelock address: https://polygonscan.com/address/0x249cdf757a499145af6a2b3a3d31ffe9de3c8cd5
 
 
 
