@@ -185,6 +185,12 @@ More details here: https://equals9.com/documents/TOKENOMICS_ENGLISH.pdf
 
 
 
+
+## Other timelocks:
+
+https://polygonscan.com/address/0xb2fb6d9472cb90ae56506f3274c1304d57c35fb1
+https://polygonscan.com/address/0x05BdC765c286C930FB02799D365523E25BB7b2C5
+
 ## On Harmony mainnet before network change (LEGACY)
 
 The contract is deployed in the following addres: `0x598228643d6faa1b5569c3d996cb8cf8ca1fdb92`
