@@ -5,16 +5,18 @@ async function main() {
   console.log("owner ", owner.address);
   console.log("balance ", (await owner.getBalance()).toString());
 
-  const eq9Adress = "0x7B4736f9C88c0A59310BfFD3F5d7462812aeC43B";
+  const eq9Adress = "0x3963a400b42377376d6c3d92ddf2d6288d8ee0d6";
 
   const EQ9 = await ethers.getContractFactory("EQ9");
 
   const eq9 = EQ9.attach(eq9Adress);
 
   const res = await eq9.transfer(
-    "0x9BDf5462dB8eC1551588862B6E1662B174Aa66B6",
-    ethers.utils.parseEther("1000000")
+    "0x29c32A5F1CFEF814AB1A3AC552B738D4D4b470d4",
+    ethers.utils.parseEther("6000")
   );
+
+  console.log(res.hash);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
