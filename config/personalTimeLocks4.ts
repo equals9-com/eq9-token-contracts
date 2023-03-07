@@ -15,7 +15,7 @@ export const dates = [
   new Date("04/20/2023"),
   new Date("05/20/2023"),
   new Date("06/20/2023"),
-  new Date("7/20/2023"),
+  new Date("07/20/2023"),
   new Date("08/20/2023"),
   new Date("09/20/2023"),
   new Date("10/20/2023"),
