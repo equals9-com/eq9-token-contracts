@@ -54,12 +54,12 @@ contract TokenMultiTimelock {
             _releaseTimes.length == _releaseAmounts.length,
             "length mismatch between arrays"
         );
-        for (uint256 i = 0; i < _releaseTimes.length; i++) {
-            require(
-                _releaseTimes[i] > block.timestamp,
-                "release is before current time"
-            );
-        }
+        // for (uint256 i = 0; i < _releaseTimes.length; i++) {
+        //     require(
+        //         _releaseTimes[i] > block.timestamp,
+        //         "release is before current time"
+        //     );
+        // }
         token = IERC20(_token);
         beneficiary = _beneficiary;
         releaseTimes = _releaseTimes;
