@@ -5,7 +5,7 @@ async function main() {
   console.log("owner ", owner.address);
   console.log("balance ", (await owner.getBalance()).toString());
 
-  const tournamentId = "184";
+  const tournamentId = "186";
 
   const TournamentManagerAddress = "0x59a3aB823c63268CBfDD13476031a47E07f179e7";
   const TournamentManager = await ethers.getContractFactory(
