@@ -9,10 +9,17 @@ async function main() {
   const eq9Address = "0x3963a400b42377376d6c3d92Ddf2d6288D8EE0d6";
 
   const addresses = [
-    "0xC9B1D9335BE15625Ddf91EBb848cEeEDc546B02E",
-    "0xEdd4a98aC93fcfcCd5226a3daA2DcBb37b94c4AA",
-    "0x1226a31008C316FfE800Dd210a19083A4B0Ed9C7",
-    "0x812E90077b6011b907EDF6Db1383EF33cA8EA257",
+    // Service Provider: H.FC.A
+    "0x812f90cB818b4DB72B3473F4aAFF75331Eb23111",
+
+    // Service Provider: H.F.L.H
+    "0x9044ae81385624b08A4460C5A22A9D10E44167dA",
+
+    // Service Provider: H.F.J.D.B
+    "0x20dd5A41B8D70F079A49657b1A59ceB444c8F6C7",
+
+    // Service Provider: H.F.A.N
+    "0xBe61D45Bfd587EcE3DFA3303BB519F25e1A00fa8",
   ];
 
   for (const [index, timelock] of timelocks.entries()) {
