@@ -5,7 +5,7 @@ async function main() {
   console.log("owner ", owner.address);
   console.log("balance ", (await owner.getBalance()).toString());
 
-  const tournamentId = "186";
+  const tournamentId = "189";
 
   const TournamentManagerAddress = "0x59a3aB823c63268CBfDD13476031a47E07f179e7";
   const TournamentManager = await ethers.getContractFactory(
@@ -19,7 +19,7 @@ async function main() {
   console.log("general json", res);
   console.log("token fee", res.tokenFee.toString());
 
-  const txx = await tmInstance.setStartedState(tournamentId);
+  const txx = await tmInstance.setWaitingState(tournamentId);
   await txx.wait();
 
   // const tx = await tmInstance.setStartedState(tournamentId);
