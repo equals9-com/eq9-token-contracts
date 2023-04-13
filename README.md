@@ -55,6 +55,13 @@ mumbai scan:
 https://mumbai.polygonscan.com/address/0xa938AF9d64b6DeE5d79BCAC8ad1cB12DD2D6c360
 
 
+### mumbai testnet USDT
+
+We have created a token to test tournaments with usdt, that simply mocks what an USDT token would do.
+It's deployed in the address: `0x157Bd22b6848A42ddBeF467cB6B0d0A2C806E01B`
+
+https://mumbai.polygonscan.com/address/0x157Bd22b6848A42ddBeF467cB6B0d0A2C806E01B
+
 
 
 ## testing
