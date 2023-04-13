@@ -115,12 +115,10 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
      * @param _token the address of the given token contract.
      */
 
-    function createTournament(uint256 _fee, address _token)
-        public
-        payable
-        whenNotPaused
-        returns (uint256)
-    {
+    function createTournament(
+        uint256 _fee,
+        address _token
+    ) public payable whenNotPaused returns (uint256) {
         uint256 currentId = id.current();
         Tournament storage newTournament = tournaments[currentId];
         newTournament.admin = msg.sender;
@@ -167,10 +165,10 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
      * @param _subscriber the player that subscribe and will receive back it's funds
      */
 
-    function _cancelSubscription(uint256 _id, address payable _subscriber)
-        private
-        nonReentrant
-    {
+    function _cancelSubscription(
+        uint256 _id,
+        address payable _subscriber
+    ) private nonReentrant {
         Tournament storage tournament = tournaments[_id];
         uint256 refund = subscription[_id][_subscriber];
         subscription[_id][_subscriber] = 0;
@@ -256,12 +254,10 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
      * registered as participant of the tournament.
      * @param _id the id of the tournament to join
      */
-    function join(uint256 _id, address _player)
-        public
-        payable
-        nonReentrant
-        onlyNetworkToken(_id)
-    {
+    function join(
+        uint256 _id,
+        address _player
+    ) public payable nonReentrant onlyNetworkToken(_id) {
         Tournament storage tournament = tournaments[_id];
         require(
             tournament.state == TournamentState.Waiting,
@@ -285,12 +281,10 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
      * registered as participant of the tournament.
      * @param _id the id of the tournament to join
      */
-    function joinERC20(uint256 _id, address _player)
-        public
-        payable
-        nonReentrant
-        onlyTokenERC20(_id)
-    {
+    function joinERC20(
+        uint256 _id,
+        address _player
+    ) public payable nonReentrant onlyTokenERC20(_id) {
         Tournament storage tournament = tournaments[_id];
         require(
             tournament.state == TournamentState.Waiting,
@@ -314,12 +308,9 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
      * the network token
      * @param _id the id of the tournament to join
      */
-    function addPrize(uint256 _id)
-        public
-        payable
-        nonReentrant
-        onlyNetworkToken(_id)
-    {
+    function addPrize(
+        uint256 _id
+    ) public payable nonReentrant onlyNetworkToken(_id) {
         Tournament storage tournament = tournaments[_id];
         require(msg.value > 0, "prize increase must be greater than 0");
         require(
@@ -341,12 +332,10 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
      * @param _id the id of the tournament to join
      * @param _amount the ERC20 token amount used to transfer to the contract
      */
-    function addPrizeERC20(uint256 _id, uint256 _amount)
-        public
-        payable
-        nonReentrant
-        onlyTokenERC20(_id)
-    {
+    function addPrizeERC20(
+        uint256 _id,
+        uint256 _amount
+    ) public payable nonReentrant onlyTokenERC20(_id) {
         Tournament storage tournament = tournaments[_id];
         require(_amount > 0, "prize increase must be greater than 0");
         require(
@@ -440,11 +429,10 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
      * @param _id the id of the tournament to check payment
      * @param _player address to be checked
      */
-    function checkPayment(uint256 _id, address _player)
-        public
-        view
-        returns (bool)
-    {
+    function checkPayment(
+        uint256 _id,
+        address _player
+    ) public view returns (bool) {
         if (subscription[_id][_player] == 0) {
             return false;
         } else return true;
@@ -485,11 +473,7 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
      * @param _account The address of the payee to add.
      * @param _shares The number of shares owned by the payee.
      */
-    function _addPayee(
-        uint256 _id,
-        address _account,
-        uint256 _shares
-    ) private {
+    function _addPayee(uint256 _id, address _account, uint256 _shares) private {
         Tournament storage tournament = tournaments[_id];
         require(
             _account != address(0),
@@ -520,11 +504,10 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
      * @param _account the receiver address of the shares
      * @param _amount the amount to be received
      */
-    function release(address payable _account, uint256 _amount)
-        public
-        payable
-        nonReentrant
-    {
+    function release(
+        address payable _account,
+        uint256 _amount
+    ) public payable nonReentrant {
         require(shares[_account] > 0, "account has no shares");
         require(_amount <= shares[_account], "amount exceeds shares");
 
@@ -565,11 +548,9 @@ contract TournamentManager is Ownable, ReentrancyGuard, Pausable {
         return players[_id].length;
     }
 
-    function getTournamentStruct(uint256 _id)
-        external
-        view
-        returns (Tournament memory)
-    {
+    function getTournamentStruct(
+        uint256 _id
+    ) external view returns (Tournament memory) {
         return tournaments[_id];
     }
 

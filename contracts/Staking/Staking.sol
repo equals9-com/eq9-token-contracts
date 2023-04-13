@@ -121,11 +121,9 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
         emit Claimed(toSendAmount, block.timestamp, msg.sender);
     }
 
-    function fetchStakersAmount(address _player)
-        external
-        view
-        returns (uint256 _stakersAmount)
-    {
+    function fetchStakersAmount(
+        address _player
+    ) external view returns (uint256 _stakersAmount) {
         _stakersAmount = stakerAddresses[_player].length();
     }
 
@@ -167,10 +165,10 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
      * @dev this function will be used by the onwer to revert all stakes of a
      * given user.
      */
-    function revertStakesFromAPlayer(address _staker, address _player)
-        external
-        onlyOwner
-    {
+    function revertStakesFromAPlayer(
+        address _staker,
+        address _player
+    ) external onlyOwner {
         uint256 total;
 
         if (claimAmount[_staker] == 0 && stakerAmounts[_player][_staker] == 0) {

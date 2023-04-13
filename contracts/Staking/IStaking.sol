@@ -61,10 +61,9 @@ interface IStaking {
      */
     function claim() external;
 
-    function fetchStakersAmount(address _player)
-        external
-        view
-        returns (uint256 _stakersAmount);
+    function fetchStakersAmount(
+        address _player
+    ) external view returns (uint256 _stakersAmount);
 
     /**
      * @dev function used to fetch all stakes into a player
