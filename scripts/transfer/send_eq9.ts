@@ -1,9 +1,13 @@
 import { ethers } from "hardhat";
+import { PolygonGasCalculatorService } from "../utils/gasCalculator";
 
 async function main() {
   const [owner] = await ethers.getSigners();
   console.log("owner ", owner.address);
   console.log("balance ", (await owner.getBalance()).toString());
+
+  const calculator = new PolygonGasCalculatorService();
+  const { maxFeePerGas, maxPriorityFeePerGas } = await calculator.calcGas();
 
   const eq9Adress = "0x3963a400b42377376d6c3d92ddf2d6288d8ee0d6";
 
@@ -12,8 +16,9 @@ async function main() {
   const eq9 = EQ9.attach(eq9Adress);
 
   const res = await eq9.transfer(
-    "0x29c32A5F1CFEF814AB1A3AC552B738D4D4b470d4",
-    ethers.utils.parseEther("6000")
+    "0xb6C4F3084aa922De4c3DAc03b1FF3C6d2aaf34Cd",
+    ethers.utils.parseEther("0.1"),
+    { maxFeePerGas, maxPriorityFeePerGas }
   );
 
   console.log(res.hash);

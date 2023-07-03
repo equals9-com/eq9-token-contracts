@@ -1,8 +1,9 @@
-import { BigNumber, utils } from "ethers";
-import axios from "axios";
+import { BigNumber } from "ethers";
+// import axios from "axios";
+import { ethers } from "hardhat";
 
 export class PolygonGasCalculatorService {
-  public gasStationUrl = "https://gasstation-mainnet.matic.network/v2";
+  public gasStationUrl = "https://gasstation.polygon.technology/";
 
   /**
    *
@@ -12,13 +13,12 @@ export class PolygonGasCalculatorService {
     let maxFeePerGas = BigNumber.from("40000000000"); // fallback to 40 gwei
     let maxPriorityFeePerGas = BigNumber.from("40000000000"); // fallback to 40 gwei
     try {
-      const { data } = await axios.get(this.gasStationUrl);
-      maxFeePerGas = utils.parseUnits(`${Math.ceil(data.fast.maxFee)}`, "gwei");
+      const res = await ethers.provider.getFeeData();
 
-      maxPriorityFeePerGas = utils.parseUnits(
-        `${Math.ceil(data.fast.maxPriorityFee)}`,
-        "gwei"
-      );
+      if (res.maxFeePerGas && res.maxPriorityFeePerGas) {
+        maxFeePerGas = res.maxFeePerGas;
+        maxPriorityFeePerGas = res.maxPriorityFeePerGas;
+      }
     } catch (e) {
       console.error(e);
     }
